@@ -6,3 +6,5 @@ bin/
 .project
 *.class
 *.tmp
+.idea
+*.iml
