@@ -2,13 +2,7 @@ package eu.execom.fabut.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
@@ -263,7 +257,7 @@ public class ReflectionUtilTest extends Assert {
     }
 
     /**
-     * Test for isListType of {@link ReflectionUtil} when specified object is instance of {@link Collection} interface.
+     * Test for isListType of {@link ReflectionUtil} when specified object is instance of {@link List} interface.
      */
     @Test
     public void testIsListTypeTrue() {
@@ -272,7 +266,7 @@ public class ReflectionUtilTest extends Assert {
     }
 
     /**
-     * Test for isListType of {@link ReflectionUtil} when specified object is not instance of {@link Collection}
+     * Test for isListType of {@link ReflectionUtil} when specified object is not instance of {@link List}
      * interface.
      */
     @Test
@@ -280,6 +274,26 @@ public class ReflectionUtilTest extends Assert {
         // assert
         assertFalse(ReflectionUtil.isListType(TEST));
     }
+
+    /**
+     * Test for isSetType of {@link ReflectionUtil} when specified object is instance of {@link Set} interface.
+     */
+    @Test
+    public void testIsSetTypeTrue() {
+        // assert
+        assertTrue(ReflectionUtil.isSetType(new HashSet<String>()));
+    }
+
+    /**
+     * Test for isSetType of {@link ReflectionUtil} when specified object is not instance of {@link Set}
+     * interface.
+     */
+    @Test
+    public void testIsSetTypeFalse() {
+        // assert
+        assertFalse(ReflectionUtil.isSetType(TEST));
+    }
+
 
     @Test
     public void testIsMapTypeTrue() {
