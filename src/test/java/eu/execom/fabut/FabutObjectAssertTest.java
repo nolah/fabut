@@ -1,48 +1,21 @@
 package eu.execom.fabut;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
-
-import org.junit.Test;
-
 import eu.execom.fabut.enums.AssertableType;
 import eu.execom.fabut.enums.ReferenceCheckType;
 import eu.execom.fabut.graph.NodesList;
-import eu.execom.fabut.model.A;
-import eu.execom.fabut.model.B;
-import eu.execom.fabut.model.C;
-import eu.execom.fabut.model.EntityTierOneType;
-import eu.execom.fabut.model.IgnoredType;
-import eu.execom.fabut.model.NoGetMethodsType;
-import eu.execom.fabut.model.TierFiveType;
-import eu.execom.fabut.model.TierFourType;
-import eu.execom.fabut.model.TierOneType;
-import eu.execom.fabut.model.TierSixType;
-import eu.execom.fabut.model.TierThreeType;
-import eu.execom.fabut.model.TierTwoType;
-import eu.execom.fabut.model.TierTwoTypeWithIgnoreProperty;
-import eu.execom.fabut.model.TierTwoTypeWithListProperty;
-import eu.execom.fabut.model.TierTwoTypeWithPrimitiveProperty;
-import eu.execom.fabut.model.UnknownType;
+import eu.execom.fabut.model.*;
 import eu.execom.fabut.pair.AssertPair;
 import eu.execom.fabut.pair.SnapshotPair;
-import eu.execom.fabut.property.IMultiProperties;
-import eu.execom.fabut.property.IProperty;
-import eu.execom.fabut.property.ISingleProperty;
-import eu.execom.fabut.property.IgnoredProperty;
-import eu.execom.fabut.property.NotNullProperty;
-import eu.execom.fabut.property.NullProperty;
-import eu.execom.fabut.property.Property;
+import eu.execom.fabut.property.*;
 import eu.execom.fabut.report.FabutReportBuilder;
+import org.junit.Test;
+
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * Tests methods from {@link FabutObjectAssert}.
- * 
+ *
  * @author Dusko Vesin
  * @author Nikola Olah
  * @author Bojan Babic
@@ -52,7 +25,7 @@ import eu.execom.fabut.report.FabutReportBuilder;
 public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     private static final String EMPTY_STRING = "";
     private static final String TEST = "test";
-    private static final String DOT = ".";
+
 
     /**
      * Test for getFabutObjectAssert().assertObject if it ignores types added to ignore list.
@@ -484,7 +457,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
                 + TEST), TEST);
 
         final List<ISingleProperty> properties = new LinkedList<ISingleProperty>();
-        properties.add(Fabut.ignored(TierTwoType.PROPERTY + DOT + TierOneType.PROPERTY));
+        properties.add(Fabut.ignored(TierTwoType.PROPERTY.chain(TierOneType.PROPERTY)));
 
         // method
         final boolean assertResult = getFabutObjectAssert().assertObjects(new FabutReportBuilder(), expected, actual,
@@ -564,8 +537,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     }
 
     /**
-     * Test for {@link FabutObjectAssert#getFabutObjectAssert().assertPair(String, FabutReportBuilder, AssertPair, List,
-     * NodesList)} when object graph is trivial.
+     * Test for {@link FabutObjectAssert#assertPair(String, FabutReportBuilder, AssertPair, List, NodesList)} when object graph is trivial.
      */
     @Test
     public void testAssertPairrTrivialGraphEqual() {
@@ -584,7 +556,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     }
 
     /**
-     * Test for {@link FabutObjectAssert#getFabutObjectAssert().assertPair(String, FabutReportBuilder, AssertPair, List,
+     * Test for {@link FabutObjectAssert#assertPair(String, FabutReportBuilder, AssertPair, List,
      * NodesList)} when actual and expected object nodes are contained in nodes list.
      */
     @Test
@@ -605,7 +577,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     }
 
     /**
-     * Test for {@link FabutObjectAssert#getFabutObjectAssert().assertPair(String, FabutReportBuilder, AssertPair, List,
+     * Test for {@link FabutObjectAssert#assertPair(String, FabutReportBuilder, AssertPair, List,
      * NodesList)} when asserting objects are cyclic graphs.
      */
     @Test
@@ -629,8 +601,8 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     }
 
     /**
-     * Test for {@link FabutObjectAssert#getFabutObjectAssert().assertSubfields(FabutReportBuilder, AssertPair, List,
-     * NodesList)} when getting reference to field via {@link Method}'s method invoke and it trows exception.
+     * Test for {@link FabutObjectAssert#assertSubfields(FabutReportBuilder, AssertPair, List, NodesList, String)}
+     * when getting reference to field via {@link Method}'s method invoke and it trows exception.
      */
     @Test
     public void testAssertSubfieldsExceptionInReflectionCalls() {
@@ -644,8 +616,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     }
 
     /**
-     * Test for {@link FabutObjectAssert#getFabutObjectAssert().assertSubfields(FabutReportBuilder, AssertPair, List,
-     * NodesList)} when object pair can be asseted.
+     * Test for {@link FabutObjectAssert#assertSubfields(FabutReportBuilder, AssertPair, List, NodesList, String)} when object pair can be asseted.
      */
     @Test
     public void testAssertSubfieldsAsserted() {
@@ -665,8 +636,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     }
 
     /**
-     * Test for {@link FabutObjectAssert#getFabutObjectAssert().assertSubfields(FabutReportBuilder, AssertPair, List,
-     * NodesList)} when asserting objects fail.
+     * Test for {@link FabutObjectAssert#assertSubfields(FabutReportBuilder, AssertPair, List, NodesList, String)} when asserting objects fail.
      */
     @Test
     public void testAssertSubfieldsAssertFails() {
@@ -686,8 +656,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     }
 
     /**
-     * Test for {@link FabutObjectAssert#getFabutObjectAssert().assertSubfields(FabutReportBuilder, AssertPair, List,
-     * NodesList)} when asserting pair of objects with no get methods.
+     * Test for {@link FabutObjectAssert#assertSubfields(FabutReportBuilder, AssertPair, List, NodesList, String)} when asserting pair of objects with no get methods.
      */
     @Test
     public void testAssertSubfieldsNoGetMethodsType() {
@@ -1010,7 +979,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     public void testPreAssertObjectWithPropertiesBadProperties() {
         // setup
         final List<ISingleProperty> properties = new ArrayList<ISingleProperty>();
-        properties.add(Fabut.value(TEST, TEST));
+        properties.add(Fabut.value(new PropertyPath<String>(TEST), TEST));
 
         // method
         final boolean assertValue = getFabutObjectAssert().assertObjectWithProperties(new FabutReportBuilder(),
@@ -1028,9 +997,9 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
         // setup
         final List<ISingleProperty> properties = new ArrayList<ISingleProperty>();
 
-        properties.add(Fabut.notNull("parent.id"));
-        properties.add(Fabut.notNull("parent.name"));
-        properties.add(Fabut.notNull("parent.lastname"));
+        properties.add(Fabut.notNull(new PropertyPath("parent.id")));
+        properties.add(Fabut.notNull(new PropertyPath("parent.name")));
+        properties.add(Fabut.notNull(new PropertyPath("parent.lastname")));
 
         // method
         final List<ISingleProperty> unqualifiedProperties = getFabutObjectAssert().removeParentQualification("parent",
@@ -1054,11 +1023,11 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
         final int numProperties = properties.size();
 
         // method
-        final ISingleProperty property = getFabutObjectAssert().obtainProperty(tierOneType, TierOneType.PROPERTY,
+        final ISingleProperty property = getFabutObjectAssert().obtainProperty(tierOneType, TierOneType.PROPERTY.getPath(),
                 properties);
 
         // assert
-        assertEquals(TierOneType.PROPERTY, property.getPath());
+        assertEquals(TierOneType.PROPERTY.getPath(), property.getPath());
         assertEquals(numProperties - 1, properties.size());
     }
 
@@ -1071,15 +1040,15 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
         // setup
         final TierOneType tierOneType = new TierOneType(TEST);
         final List<ISingleProperty> properties = new ArrayList<ISingleProperty>();
-        properties.add(Fabut.notNull(TEST));
+        properties.add(Fabut.notNull(new PropertyPath<Object>(TEST)));
         final int numProperties = properties.size();
 
         // method
-        final Property property = (Property) getFabutObjectAssert().obtainProperty(tierOneType, TierOneType.PROPERTY,
+        final Property property = (Property) getFabutObjectAssert().obtainProperty(tierOneType, TierOneType.PROPERTY.getPath(),
                 properties);
 
         // assert
-        assertEquals(TierOneType.PROPERTY, property.getPath());
+        assertEquals(TierOneType.PROPERTY.getPath(), property.getPath());
         assertEquals(tierOneType, property.getValue());
         assertEquals(numProperties, properties.size());
 
@@ -1092,7 +1061,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     public void testPopPropertyEqualPath() {
         // setup
         final List<ISingleProperty> properties = new LinkedList<ISingleProperty>();
-        properties.add(Fabut.isNull(TEST));
+        properties.add(Fabut.isNull(new PropertyPath(TEST)));
 
         // method
         final ISingleProperty property = getFabutObjectAssert().getPropertyFromList(TEST, properties);
@@ -1124,7 +1093,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     public void testPopPropertyNotEqualPath() {
         // setup
         final List<ISingleProperty> properties = new LinkedList<ISingleProperty>();
-        properties.add(Fabut.isNull(TEST));
+        properties.add(Fabut.isNull(new PropertyPath(TEST)));
 
         // method
         final ISingleProperty property = getFabutObjectAssert().getPropertyFromList(TEST + TEST, properties);
@@ -1203,9 +1172,9 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
 
         // assert
         assertEquals(3, properties.size());
-        assertEquals(EntityTierOneType.PROPERTY, properties.get(0).getPath());
-        assertEquals(EntityTierOneType.ID, properties.get(1).getPath());
-        assertEquals(EntityTierOneType.PROPERTY, properties.get(2).getPath());
+        assertEquals(EntityTierOneType.PROPERTY.getPath(), properties.get(0).getPath());
+        assertEquals(EntityTierOneType.ID.getPath(), properties.get(1).getPath());
+        assertEquals(EntityTierOneType.PROPERTY.getPath(), properties.get(2).getPath());
     }
 
     /**
@@ -1214,7 +1183,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
     @Test
     public void testExtractPropertiesAllISingleProperty() {
         // setup
-        final IProperty[] propArray = new ISingleProperty[] {Fabut.value(EntityTierOneType.PROPERTY, ""),
+        final IProperty[] propArray = new ISingleProperty[]{Fabut.value(EntityTierOneType.PROPERTY, ""),
                 Fabut.value(EntityTierOneType.ID, 0)};
 
         // method
@@ -1235,7 +1204,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
         // setup
         final IMultiProperties notNullMultiProp = Fabut.notNull(EntityTierOneType.PROPERTY, EntityTierOneType.ID);
         final IMultiProperties ignoredMultiProp = Fabut.ignored(EntityTierOneType.PROPERTY, EntityTierOneType.ID);
-        final IProperty[] multiPropArray = new IMultiProperties[] {notNullMultiProp, ignoredMultiProp};
+        final IProperty[] multiPropArray = new IMultiProperties[]{notNullMultiProp, ignoredMultiProp};
 
         // method
         final List<ISingleProperty> properties = getFabutObjectAssert().extractProperties(multiPropArray);
@@ -1266,12 +1235,11 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
                 expected,
                 actual,
                 getFabutObjectAssert().extractProperties(
-                        Fabut.ignored(TierTwoType.PROPERTY + DOT + TierOneType.PROPERTY,
-                                TierTwoTypeWithPrimitiveProperty.PROPERTY2)));
+                        Fabut.ignored(TierTwoType.PROPERTY.chain(TierOneType.PROPERTY).chain(TierTwoTypeWithPrimitiveProperty.PROPERTY2))));
     }
 
     /**
-     * Test for {@link FabutObjectAssert#takeSnapshot(Object...)}.
+     * Test for {@link FabutObjectAssert#takeSnapshot(FabutReportBuilder, Object...)}.
      */
     @Test
     public void testTakeSnapshot() {
@@ -1300,10 +1268,10 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
         // setup
         final String parent = "parent";
         final List<ISingleProperty> properties = new LinkedList<ISingleProperty>();
-        properties.add(Fabut.value("parent.name", "name"));
-        properties.add(Fabut.value("parents", "parents"));
-        properties.add(Fabut.value("parent.lastName", "lastName"));
-        properties.add(Fabut.value("parent.address.city", "city"));
+        properties.add(Fabut.value(new PropertyPath<String>("parent.name"), "name"));
+        properties.add(Fabut.value(new PropertyPath<String>("parents"), "parents"));
+        properties.add(Fabut.value(new PropertyPath<String>("parent.lastName"), "lastName"));
+        properties.add(Fabut.value(new PropertyPath<String>("parent.address.city"), "city"));
 
         // method
         final List<ISingleProperty> extracted = getFabutObjectAssert().extractPropertiesWithMatchingParent(parent,
@@ -1323,7 +1291,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
         // setup
         final String parent = "parent";
         final List<ISingleProperty> properties = new LinkedList<ISingleProperty>();
-        properties.add(Fabut.value("parent.name", "name"));
+        properties.add(Fabut.value(new PropertyPath<String>("parent.name"), "name"));
 
         // method
         final boolean hasInnerProperties = getFabutObjectAssert().hasInnerProperties(parent, properties);
@@ -1337,7 +1305,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
         // setup
         final String parent = "parent";
         final List<ISingleProperty> properties = new LinkedList<ISingleProperty>();
-        properties.add(Fabut.value("parents", "name"));
+        properties.add(Fabut.value(new PropertyPath<String>("parents"), "name"));
 
         // method
         final boolean hasInnerProperties = getFabutObjectAssert().hasInnerProperties(parent, properties);
@@ -1351,7 +1319,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
         // setup
         final TierOneType actual = new TierOneType(TEST);
         final List<ISingleProperty> properties = new LinkedList<ISingleProperty>();
-        properties.add(Fabut.value("property.property", TEST));
+        properties.add(Fabut.value(new PropertyPath<String>("property.property"), TEST));
         final FabutReportBuilder report = new FabutReportBuilder();
         // assert
         assertTrue(getFabutObjectAssert().assertInnerProperty(report, actual, properties, "property"));
@@ -1364,7 +1332,7 @@ public class FabutObjectAssertTest extends AbstractFabutObjectAssertTest {
         final TierOneType actual = new TierOneType(TEST);
         final TierOneType expected = new TierOneType(TEST + TEST);
         final List<ISingleProperty> properties = new LinkedList<ISingleProperty>();
-        properties.add(Fabut.value("property.property", TEST + TEST));
+        properties.add(Fabut.value(new PropertyPath<String>("property.property"), TEST + TEST));
         final FabutReportBuilder report = new FabutReportBuilder();
         // assert
         assertTrue(getFabutObjectAssert().assertInnerObject(report, actual, expected, properties, "property"));

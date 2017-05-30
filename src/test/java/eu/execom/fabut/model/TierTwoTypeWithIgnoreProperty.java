@@ -1,5 +1,7 @@
 package eu.execom.fabut.model;
 
+import eu.execom.fabut.property.PropertyPath;
+
 /**
  * Type with one ignored type property.
  * 
@@ -11,7 +13,7 @@ package eu.execom.fabut.model;
 public class TierTwoTypeWithIgnoreProperty extends Type {
 
     /** The Constant IGNORED_TYPE. */
-    public static final String IGNORED_TYPE = "ignoredType";
+    public static final PropertyPath<IgnoredType> IGNORED_TYPE = new PropertyPath<IgnoredType>("ignoredType");
 
     /** The ignored type. */
     private final IgnoredType ignoredType;

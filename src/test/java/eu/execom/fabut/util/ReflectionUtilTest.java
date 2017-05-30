@@ -235,11 +235,11 @@ public class ReflectionUtilTest extends Assert {
     @Test
     public void testFindFieldInInheritanceSubclass() {
         // method
-        final Field field = ReflectionUtil.findField(EntityTierOneType.class, EntityTierOneType.PROPERTY);
+        final Field field = ReflectionUtil.findField(EntityTierOneType.class, EntityTierOneType.PROPERTY.getPath());
 
         // assert
         assertNotNull(field);
-        assertEquals(EntityTierOneType.PROPERTY, field.getName());
+        assertEquals(EntityTierOneType.PROPERTY.getPath(), field.getName());
     }
 
     /**
@@ -249,11 +249,11 @@ public class ReflectionUtilTest extends Assert {
     @Test
     public void testFindFieldInInheritanceSuperclass() {
         // method
-        final Field field = ReflectionUtil.findField(EntityTierOneType.class, EntityTierOneType.ID);
+        final Field field = ReflectionUtil.findField(EntityTierOneType.class, EntityTierOneType.ID.getPath());
 
         // assert
         assertNotNull(field);
-        assertEquals(EntityTierOneType.ID, field.getName());
+        assertEquals(EntityTierOneType.ID.getPath(), field.getName());
     }
 
     /**

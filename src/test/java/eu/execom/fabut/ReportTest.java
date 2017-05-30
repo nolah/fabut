@@ -1,26 +1,21 @@
 package eu.execom.fabut;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
+import eu.execom.fabut.model.*;
+import eu.execom.fabut.model.test.Address;
+import eu.execom.fabut.model.test.Faculty;
+import eu.execom.fabut.model.test.Student;
+import eu.execom.fabut.model.test.Teacher;
+import eu.execom.fabut.property.PropertyPath;
 import junit.framework.AssertionFailedError;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import eu.execom.fabut.model.EntityTierOneType;
-import eu.execom.fabut.model.NoDefaultConstructorEntity;
-import eu.execom.fabut.model.TierOneType;
-import eu.execom.fabut.model.TierTwoTypeWithListProperty;
-import eu.execom.fabut.model.TierTwoTypeWithMap;
-import eu.execom.fabut.model.test.Address;
-import eu.execom.fabut.model.test.Faculty;
-import eu.execom.fabut.model.test.Student;
-import eu.execom.fabut.model.test.Teacher;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 @Ignore
 public class ReportTest extends AbstractFabutRepositoryAssertTest {
@@ -84,7 +79,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#takeSnapshot()} when there are entites in repository that cannot be copied.
+     * Test for {@link Fabut#takeSnapshot(Object...)} when there are entites in repository that cannot be copied.
      */
     @Test(expected = AssertionFailedError.class)
     public void testTakeSnapshotFail() {
@@ -101,7 +96,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#takeSnapshot()} when repository can be copied.
+     * Test for {@link Fabut#takeSnapshot(Object...)} when repository can be copied.
      */
     @Test
     public void testTakeSnapshotSuccess() {
@@ -646,14 +641,18 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
 
         // assert
         try {
-            Fabut.assertObject(student, Fabut.value("name", "Nikola"), Fabut.value("lastName", "Olah"),
-                    Fabut.value("address.city", "Temerin1"), Fabut.value("address.street", "Novosadska"),
-                    Fabut.value("address.streetNumber", "627"), Fabut.value("faculty.name", "PMF"),
-                    Fabut.value("faculty.teacher.name", "Djura"),
-                    Fabut.value("faculty.teacher.address.city", "Kamenica"),
-                    Fabut.value("faculty.teacher.address.street", "Ljubicica"),
-                    Fabut.value("faculty.teacher.student", student),
-                    Fabut.value("faculty.teacher.address.streetNumber", "10"));
+            Fabut.assertObject(student,
+                    Fabut.value(new PropertyPath<String>("name"), "Nikola"),
+                    Fabut.value(new PropertyPath<String>("lastName"), "Olah"),
+                    Fabut.value(new PropertyPath<String>("address.city"), "Temerin1"),
+                    Fabut.value(new PropertyPath<String>("address.street"), "Novosadska"),
+                    Fabut.value(new PropertyPath<String>("address.streetNumber"), "627"),
+                    Fabut.value(new PropertyPath<String>("faculty.name"), "PMF"),
+                    Fabut.value(new PropertyPath<String>("faculty.teacher.name"), "Djura"),
+                    Fabut.value(new PropertyPath<String>("faculty.teacher.address.city"), "Kamenica"),
+                    Fabut.value(new PropertyPath<String>("faculty.teacher.address.street"), "Ljubicica"),
+                    Fabut.value(new PropertyPath<Student>("faculty.teacher.student"), student),
+                    Fabut.value(new PropertyPath<String>("faculty.teacher.address.streetNumber"), "10"));
         } catch (final Throwable e) {
             System.out.println(e.getMessage());
         }
