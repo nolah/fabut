@@ -1,23 +1,18 @@
 package eu.execom.fabut.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import junit.framework.AssertionFailedError;
-
-import org.apache.commons.lang3.StringUtils;
-
 import eu.execom.fabut.enums.AssertableType;
 import eu.execom.fabut.exception.CopyException;
 import eu.execom.fabut.graph.NodesList;
+import junit.framework.AssertionFailedError;
+import org.apache.commons.lang3.StringUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * Util class for reflection logic needed by testutil.
- * 
+ *
  * @author Dusko Vesin
  * @author Nikola Olah
  * @author Bojan Babic
@@ -26,16 +21,24 @@ import eu.execom.fabut.graph.NodesList;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public final class ReflectionUtil {
 
-    /** The Constant GET_METHOD_PREFIX. */
+    /**
+     * The Constant GET_METHOD_PREFIX.
+     */
     private static final String GET_METHOD_PREFIX = "get";
 
-    /** The Constant IS_METHOD_PREFIX. */
+    /**
+     * The Constant IS_METHOD_PREFIX.
+     */
     private static final String IS_METHOD_PREFIX = "is";
 
-    /** The Constant GET_ID. */
+    /**
+     * The Constant GET_ID.
+     */
     private static final String GET_ID = "getId";
 
-    /** The Constant SET_METHOD_PREFIX. */
+    /**
+     * The Constant SET_METHOD_PREFIX.
+     */
     protected static final String SET_METHOD_PREFIX = "set";
 
     /**
@@ -50,11 +53,9 @@ public final class ReflectionUtil {
      * their get method and all other types have "get" prefix for their get method so this method checks if field name
      * gotten from method name has a matched field name in the class X. Methods with prefix "is" have to have underlying
      * field of primitive boolean class.
-     * 
-     * @param classs
-     *            class that method belongs to
-     * @param method
-     *            thats checking
+     *
+     * @param classs class that method belongs to
+     * @param method thats checking
      * @return <code>true</code> if method is "real" get method, <code>false</code> otherwise
      */
     public static boolean isGetMethod(final Class<?> classs, final Method method) {
@@ -72,9 +73,8 @@ public final class ReflectionUtil {
     /**
      * Get field name from specified get method. It differs get methods for regular objects and primitive boolean fields
      * by their get method prefix. ("is" is the prefix for primitive boolean get method)
-     * 
-     * @param method
-     *            that is checked
+     *
+     * @param method that is checked
      * @return field name represented by specified get method
      */
     public static String getFieldName(final Method method) {
@@ -91,11 +91,9 @@ public final class ReflectionUtil {
      * Searches trough property class inheritance tree for field with specified name. Starting from property class
      * method recursively climbs higher in the inheritance tree until it finds field with specified name or reached
      * object in which case returns null.
-     * 
-     * @param fieldClass
-     *            class of the field.
-     * @param fieldName
-     *            name of the field
+     *
+     * @param fieldClass class of the field.
+     * @param fieldName  name of the field
      * @return {@link Field} with specified name, otherwise <code>null</code>>
      */
     public static Field findField(final Class<?> fieldClass, final String fieldName) {
@@ -111,11 +109,8 @@ public final class ReflectionUtil {
 
     /**
      * Determines if specified object is instance of {@link List}.
-     * 
-     * @param the
-     *            generic type
-     * @param object
-     *            unidentified object
+     *
+     * @param object unidentified object
      * @return <code>true</code> if specified object is instance of {@link List} , <code>false</code> otherwise
      */
     public static boolean isListType(final Object object) {
@@ -123,8 +118,18 @@ public final class ReflectionUtil {
     }
 
     /**
+     * Determines if specified object is instance of {@link Set}.
+     *
+     * @param object unidentified object
+     * @return <code>true</code> if specified object is instance of {@link Set} , <code>false</code> otherwise
+     */
+    public static boolean isSetType(final Object object) {
+        return object instanceof Set;
+    }
+
+    /**
      * Determines if specified object is instance of {@link Map}.
-     * 
+     *
      * @param object
      * @return
      */
@@ -134,11 +139,9 @@ public final class ReflectionUtil {
 
     /**
      * Check if specified class is contained in entity types.
-     * 
-     * @param object
-     *            thats checked
-     * @param entityTypes
-     *            list of entity types
+     *
+     * @param object      thats checked
+     * @param entityTypes list of entity types
      * @return <code>true</code> if specified class is contained in entity types, <code>false</code> otherwise.
      */
     public static boolean isEntityType(final Class<?> object, final Map<AssertableType, List<Class<?>>> types) {
@@ -156,11 +159,9 @@ public final class ReflectionUtil {
 
     /**
      * Check if specified class is contained in complex types.
-     * 
-     * @param classs
-     *            thats checking
-     * @param complexTypes
-     *            the complex types
+     *
+     * @param classs       thats checking
+     * @param complexTypes the complex types
      * @return <code>true</code> if specified class is contained in complex types, <code>false</code> otherwise.
      */
     public static boolean isComplexType(final Class<?> classs, final Map<AssertableType, List<Class<?>>> types) {
@@ -169,11 +170,9 @@ public final class ReflectionUtil {
 
     /**
      * Check if specified class is contained in ignored types.
-     * 
-     * @param classs
-     *            thats checked
-     * @param ignoredTypes
-     *            list of ignored types
+     *
+     * @param classs       thats checked
+     * @param ignoredTypes list of ignored types
      * @return <code>true</code> if specified class is contained in ignored types, <code>false</code> otherwise.
      */
     public static boolean isIgnoredType(final Class<?> classs, final Map<AssertableType, List<Class<?>>> types) {
@@ -182,18 +181,14 @@ public final class ReflectionUtil {
 
     /**
      * Checks if object is ignored type.
-     * 
-     * 
-     * @param firstObject
-     *            that is checked
-     * @param secondObject
-     *            that is checked
-     * @param ignoredTypes
-     *            list of ignored type
+     *
+     * @param firstObject  that is checked
+     * @param secondObject that is checked
+     * @param ignoredTypes list of ignored type
      * @return <code>true</code> if type of expected or actual is ignored type, <code>false</code> otherwise.
      */
     public static boolean isIgnoredType(final Object firstObject, final Object secondObject,
-            final Map<AssertableType, List<Class<?>>> types) {
+                                        final Map<AssertableType, List<Class<?>>> types) {
 
         if (secondObject != null) {
             return isIgnoredType(secondObject.getClass(), types);
@@ -208,13 +203,10 @@ public final class ReflectionUtil {
 
     /**
      * Gets entity's id value.
-     * 
-     * @param type
-     *            of entity
-     * @param <Id>
-     *            entities id type
-     * @param entity
-     *            - entity from which id is taken
+     *
+     * @param type   of entity
+     * @param <Id>   entities id type
+     * @param entity - entity from which id is taken
      * @return {@link Number} if specified entity id field and matching get method, <code>null</code> otherwise.
      */
     public static Object getIdValue(final Object entity) {
@@ -230,15 +222,11 @@ public final class ReflectionUtil {
      * Extracts all "real" get methods for object of class Object in a list and returns them. "Real" get methods are
      * those methods who have matching property in the class with the name equal to get method's name uncapitalized and
      * without "get" prefix.
-     * 
-     * @param the
-     *            generic type
-     * @param object
-     *            instance of class X
-     * @param complexTypes
-     *            the complex types
-     * @param entityTypes
-     *            the entity types
+     *
+     * @param the          generic type
+     * @param object       instance of class X
+     * @param complexTypes the complex types
+     * @param entityTypes  the entity types
      * @return {@link List} of real "get" methods of class X
      */
     public static List<Method> getGetMethods(final Object object, final Map<AssertableType, List<Class<?>>> types) {
@@ -265,13 +253,10 @@ public final class ReflectionUtil {
 
     /**
      * Gets the object get method named.
-     * 
-     * @param the
-     *            generic type
-     * @param methodName
-     *            the method name
-     * @param object
-     *            the object
+     *
+     * @param the        generic type
+     * @param methodName the method name
+     * @param object     the object
      * @return the object get method named
      */
     public static Method getGetMethod(final String methodName, final Object object) throws Exception {
@@ -280,17 +265,14 @@ public final class ReflectionUtil {
 
     /**
      * Gets the object type.
-     * 
-     * @param expected
-     *            the expected
-     * @param actual
-     *            the actual
-     * @param types
-     *            the types
+     *
+     * @param expected the expected
+     * @param actual   the actual
+     * @param types    the types
      * @return the object type
      */
     public static AssertableType getObjectType(final Object expected, final Object actual,
-            final Map<AssertableType, List<Class<?>>> types) {
+                                               final Map<AssertableType, List<Class<?>>> types) {
         if (expected == null && actual == null) {
             return AssertableType.PRIMITIVE_TYPE;
         }
@@ -315,19 +297,15 @@ public final class ReflectionUtil {
     /**
      * Creates a copy of specified object by creating instance with reflection and fills it using get and set method of
      * a class.
-     * 
-     * @param object
-     *            object for copying
-     * @param nodes
-     *            list of objects that had been copied
-     * @param types
-     *            the types
+     *
+     * @param object object for copying
+     * @param nodes  list of objects that had been copied
+     * @param types  the types
      * @return copied entity
-     * @throws CopyException
-     *             the copy exception
+     * @throws CopyException the copy exception
      */
     public static Object createCopyObject(final Object object, final NodesList nodes,
-            final Map<AssertableType, List<Class<?>>> types) throws CopyException {
+                                          final Map<AssertableType, List<Class<?>>> types) throws CopyException {
 
         Object copy = nodes.getExpected(object);
         if (copy != null) {
@@ -357,9 +335,8 @@ public final class ReflectionUtil {
 
     /**
      * Creates empty copy of object using reflection to call default constructor.
-     * 
-     * @param object
-     *            object for copying
+     *
+     * @param object object for copying
      * @return copied empty instance of specified object or <code>null</code> if default constructor can not be called
      */
     public static Object createEmptyCopyOf(final Object object) {
@@ -371,13 +348,10 @@ public final class ReflectionUtil {
     }
 
     /**
-     * 
      * Gets property for copying using reflection.
-     * 
-     * @param object
-     *            property's parent
-     * @param method
-     *            get method for property
+     *
+     * @param object property's parent
+     * @param method get method for property
      * @return property
      */
     public static Object getPropertyForCopying(final Object object, final Method method) {
@@ -390,15 +364,13 @@ public final class ReflectionUtil {
 
     /**
      * Copies property.
-     * 
-     * @param propertyForCopying
-     *            property for copying
-     * @param nodes
-     *            list of objects that had been copied
+     *
+     * @param propertyForCopying property for copying
+     * @param nodes              list of objects that had been copied
      * @return copied property
      */
     public static Object copyProperty(final Object propertyForCopying, final NodesList nodes,
-            final Map<AssertableType, List<Class<?>>> types) throws CopyException {
+                                      final Map<AssertableType, List<Class<?>>> types) throws CopyException {
         if (propertyForCopying == null) {
             // its null we shouldn't do anything
             return null;
@@ -414,6 +386,11 @@ public final class ReflectionUtil {
             return copyList((List<?>) propertyForCopying, types);
         }
 
+        if (isSetType(propertyForCopying)) {
+            // just creating new set with same elements
+            return copySet((Set<?>) propertyForCopying, types);
+        }
+
         if (isMapType(propertyForCopying)) {
             return copyMap((Map) propertyForCopying, types);
         }
@@ -425,7 +402,7 @@ public final class ReflectionUtil {
 
     /**
      * Creates a copy of specified map.
-     * 
+     *
      * @param propertyForCopying
      * @param types
      * @return
@@ -442,11 +419,9 @@ public final class ReflectionUtil {
 
     /**
      * Creates a copy of specified list.
-     * 
-     * @param <T>
-     *            type objects in the list
-     * @param list
-     *            list for copying
+     *
+     * @param <T>  type objects in the list
+     * @param list list for copying
      * @return copied list
      */
     public static <T> List<T> copyList(final List<T> list, final Map<AssertableType, List<Class<?>>> types)
@@ -459,15 +434,28 @@ public final class ReflectionUtil {
     }
 
     /**
+     * Creates a copy of specified set.
+     *
+     * @param <T> type objects in the set
+     * @param set set for copying
+     * @return copied list
+     */
+    public static <T> Set<T> copySet(final Set<T> set, final Map<AssertableType, List<Class<?>>> types)
+            throws CopyException {
+        final Set<T> copySet = new HashSet<T>();
+        for (final T t : set) {
+            copySet.add((T) copyProperty(t, new NodesList(), types));
+        }
+        return copySet;
+    }
+
+    /**
      * Create copy of specified object and return its copy.
-     * 
-     * @param object
-     *            object for copying
-     * @param types
-     *            the types
+     *
+     * @param object object for copying
+     * @param types  the types
      * @return copied object
-     * @throws CopyException
-     *             the copy exception
+     * @throws CopyException the copy exception
      */
     public static Object createCopy(final Object object, final Map<AssertableType, List<Class<?>>> types)
             throws CopyException {
@@ -480,29 +468,28 @@ public final class ReflectionUtil {
             return copyList(list, types);
         }
 
+        if (isSetType(object)) {
+            final Set<?> set = (Set<?>) object;
+            return copySet(set, types);
+        }
+
         return createCopyObject(object, new NodesList(), types);
 
     }
 
     /**
      * Invokes specified set method via reflection to set property to object.
-     * 
-     * @param <T>
-     *            object type
-     * @param method
-     *            get method for property
-     * @param classObject
-     *            parent class for property
-     * @param propertyName
-     *            property name
-     * @param object
-     *            copied parent object
-     * @param copiedProperty
-     *            copied property
+     *
+     * @param <T>            object type
+     * @param method         get method for property
+     * @param classObject    parent class for property
+     * @param propertyName   property name
+     * @param object         copied parent object
+     * @param copiedProperty copied property
      * @return <code>true</code> if set method exists and it's successfully invoked, otherwise <code>false</code>.
      */
     public static <T> boolean invokeSetMethod(final Method method, final Class<?> classObject,
-            final String propertyName, final T object, final Object copiedProperty) {
+                                              final String propertyName, final T object, final Object copiedProperty) {
         Method setMethod = null;
 
         try {
@@ -510,6 +497,17 @@ public final class ReflectionUtil {
                     method.getReturnType());
             setMethod.invoke(object, copiedProperty);
             return true;
+        } catch (final NoSuchMethodException e) {
+            if (isSetType(copiedProperty)) {
+                try {
+                    ((Set) method.invoke(object)).addAll((Set) copiedProperty);
+                    return true;
+                } catch (Exception e1) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         } catch (final Exception e) {
             return false;
         }

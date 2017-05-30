@@ -2,15 +2,12 @@ package eu.execom.fabut.util;
 
 import java.util.List;
 
+import eu.execom.fabut.property.*;
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import eu.execom.fabut.Fabut;
-import eu.execom.fabut.property.AbstractSingleProperty;
-import eu.execom.fabut.property.ISingleProperty;
-import eu.execom.fabut.property.NotNullProperty;
-import eu.execom.fabut.property.NullProperty;
 
 /**
  * Tests for {@link ConversionUtil}.
@@ -22,7 +19,7 @@ import eu.execom.fabut.property.NullProperty;
  */
 public class ConversionUtilTest extends Assert {
 
-    private static final String TEST = "test";
+    private static final PropertyPath<String> TEST =  new PropertyPath<String>("test");
 
     /**
      * Test for createListFromVaragrs of {@link ConversionUtil} when there are two properties specified in particular.

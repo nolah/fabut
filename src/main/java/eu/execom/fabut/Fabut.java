@@ -3,15 +3,9 @@ package eu.execom.fabut;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.execom.fabut.property.*;
 import junit.framework.AssertionFailedError;
 import eu.execom.fabut.enums.AssertType;
-import eu.execom.fabut.property.IProperty;
-import eu.execom.fabut.property.ISingleProperty;
-import eu.execom.fabut.property.IgnoredProperty;
-import eu.execom.fabut.property.MultiProperties;
-import eu.execom.fabut.property.NotNullProperty;
-import eu.execom.fabut.property.NullProperty;
-import eu.execom.fabut.property.Property;
 import eu.execom.fabut.report.FabutReportBuilder;
 import eu.execom.fabut.util.ConversionUtil;
 
@@ -297,8 +291,8 @@ public class Fabut {
      * @param <T>
      *            generic type
      */
-    public static <T> Property<T> value(final String path, final T expectedValue) {
-        return new Property<T>(path, expectedValue);
+    public static <T> Property<T> value(final PropertyPath<T> path, final T expectedValue) {
+        return new Property<T>(path.getPath(), expectedValue);
     }
 
     /**
@@ -308,8 +302,8 @@ public class Fabut {
      *            property path.
      * @return created object.
      */
-    public static IgnoredProperty ignored(final String path) {
-        return new IgnoredProperty(path);
+    public static IgnoredProperty ignored(final PropertyPath<?> path) {
+        return new IgnoredProperty(path.getPath());
     }
 
     /**
@@ -319,10 +313,10 @@ public class Fabut {
      *            property path.
      * @return created objects.
      */
-    public static MultiProperties ignored(final String... paths) {
+    public static MultiProperties ignored(final PropertyPath<?>... paths) {
         final List<ISingleProperty> properties = new ArrayList<ISingleProperty>();
 
-        for (final String path : paths) {
+        for (final PropertyPath<?> path : paths) {
             properties.add(ignored(path));
         }
 
@@ -336,8 +330,8 @@ public class Fabut {
      *            property path.
      * @return created object.
      */
-    public static NotNullProperty notNull(final String path) {
-        return new NotNullProperty(path);
+    public static NotNullProperty notNull(final PropertyPath<?> path) {
+        return new NotNullProperty(path.getPath());
     }
 
     /**
@@ -347,10 +341,10 @@ public class Fabut {
      *            property paths.
      * @return created objects.
      */
-    public static MultiProperties notNull(final String... paths) {
+    public static MultiProperties notNull(final PropertyPath<?>... paths) {
         final List<ISingleProperty> properties = new ArrayList<ISingleProperty>();
 
-        for (final String path : paths) {
+        for (final PropertyPath<?> path : paths) {
             properties.add(notNull(path));
         }
 
@@ -364,8 +358,8 @@ public class Fabut {
      *            property path.
      * @return created object.
      */
-    public static NullProperty isNull(final String path) {
-        return new NullProperty(path);
+    public static NullProperty isNull(final PropertyPath<?> path) {
+        return new NullProperty(path.getPath());
     }
 
     /**
@@ -375,10 +369,10 @@ public class Fabut {
      *            property paths.
      * @return created objects.
      */
-    public static MultiProperties isNull(final String... paths) {
+    public static MultiProperties isNull(final PropertyPath<?>... paths) {
         final List<ISingleProperty> properties = new ArrayList<ISingleProperty>();
 
-        for (final String path : paths) {
+        for (final PropertyPath<?> path : paths) {
             properties.add(isNull(path));
         }
 

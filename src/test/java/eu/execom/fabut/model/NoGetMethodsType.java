@@ -1,5 +1,7 @@
 package eu.execom.fabut.model;
 
+import eu.execom.fabut.property.PropertyPath;
+
 /**
  * No conventional get methods type.
  * 
@@ -11,7 +13,7 @@ package eu.execom.fabut.model;
 public class NoGetMethodsType extends Type {
 
     /** The Constant PROPERTY. */
-    public static final String PROPERTY = "property";
+    public static final PropertyPath<String> PROPERTY = new PropertyPath<String>("property");
 
     /** The property. */
     private final String property;
@@ -31,8 +33,8 @@ public class NoGetMethodsType extends Type {
     }
 
     public NoGetMethodsType() {
-        property = PROPERTY;
-        notBooleanProperty = PROPERTY;
+        property = PROPERTY.getPath();
+        notBooleanProperty = PROPERTY.getPath();
     }
 
     /**

@@ -17,7 +17,7 @@ public class PropertyTest extends Assert {
     @Test
     public void testIgnored() {
         // setup
-        final String[] properties = new String[] {EntityTierOneType.PROPERTY, EntityTierOneType.ID};
+        final PropertyPath[] properties = new PropertyPath[] {EntityTierOneType.PROPERTY, EntityTierOneType.ID};
 
         // method
         final MultiProperties multi = Fabut.ignored(properties);
@@ -27,7 +27,7 @@ public class PropertyTest extends Assert {
 
         for (int i = 0; i < properties.length; i++) {
             assertTrue(multi.getProperties().get(i) instanceof IgnoredProperty);
-            assertEquals(properties[i], multi.getProperties().get(i).getPath());
+            assertEquals(properties[i].getPath(), multi.getProperties().get(i).getPath());
         }
     }
 
@@ -37,7 +37,7 @@ public class PropertyTest extends Assert {
     @Test
     public void testNulll() {
         // setup
-        final String[] properties = new String[] {EntityTierOneType.PROPERTY, EntityTierOneType.ID};
+        final PropertyPath[] properties = new PropertyPath[] {EntityTierOneType.PROPERTY, EntityTierOneType.ID};
 
         // method
         final MultiProperties multi = Fabut.isNull(properties);
@@ -47,7 +47,7 @@ public class PropertyTest extends Assert {
 
         for (int i = 0; i < properties.length; i++) {
             assertTrue(multi.getProperties().get(i) instanceof NullProperty);
-            assertEquals(properties[i], multi.getProperties().get(i).getPath());
+            assertEquals(properties[i].getPath(), multi.getProperties().get(i).getPath());
         }
     }
 
@@ -57,7 +57,7 @@ public class PropertyTest extends Assert {
     @Test
     public void testNotNull() {
         // setup
-        final String[] properties = new String[] {EntityTierOneType.PROPERTY, EntityTierOneType.ID};
+        final PropertyPath[] properties = new PropertyPath[] {EntityTierOneType.PROPERTY, EntityTierOneType.ID};
 
         // method
         final MultiProperties multi = Fabut.notNull(properties);
@@ -67,7 +67,7 @@ public class PropertyTest extends Assert {
 
         for (int i = 0; i < properties.length; i++) {
             assertTrue(multi.getProperties().get(i) instanceof NotNullProperty);
-            assertEquals(properties[i], multi.getProperties().get(i).getPath());
+            assertEquals(properties[i].getPath(), multi.getProperties().get(i).getPath());
         }
     }
 

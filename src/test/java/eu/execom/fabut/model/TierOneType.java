@@ -1,5 +1,7 @@
 package eu.execom.fabut.model;
 
+import eu.execom.fabut.property.PropertyPath;
+
 /**
  * Tier one complex type with only one {@link String} property.
  * 
@@ -11,7 +13,7 @@ package eu.execom.fabut.model;
 public class TierOneType extends Type {
 
     /** The property. */
-    public static String PROPERTY = "property";
+    public static PropertyPath<String> PROPERTY = new PropertyPath<String>("property");
 
     /** The property. */
     private String property;

@@ -1,10 +1,12 @@
 package eu.execom.fabut.model;
 
+import eu.execom.fabut.property.PropertyPath;
+
 import java.util.List;
 
 /**
  * Tier two type with list as property.
- * 
+ *
  * @author Dusko Vesin
  * @author Nikola Olah
  * @author Bojan Babic
@@ -12,17 +14,20 @@ import java.util.List;
  */
 public class TierTwoTypeWithListProperty extends Type {
 
-    /** The Constant PROPERTY. */
-    public static final String PROPERTY = "property";
+    /**
+     * The Constant PROPERTY.
+     */
+    public static final PropertyPath<List<String>> PROPERTY = new PropertyPath<List<String>>("property");
 
-    /** The property. */
+    /**
+     * The property.
+     */
     private final List<String> property;
 
     /**
      * Instantiates a new tier two type with list property.
-     * 
-     * @param property
-     *            the property
+     *
+     * @param property the property
      */
     public TierTwoTypeWithListProperty(final List<String> property) {
         this.property = property;
@@ -30,7 +35,7 @@ public class TierTwoTypeWithListProperty extends Type {
 
     /**
      * Gets the property.
-     * 
+     *
      * @return the property
      */
     public List<String> getProperty() {

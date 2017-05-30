@@ -1,28 +1,18 @@
 package eu.execom.fabut;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import junit.framework.AssertionFailedError;
-
-import org.junit.Test;
-
-import eu.execom.fabut.model.EntityTierOneType;
-import eu.execom.fabut.model.NoDefaultConstructorEntity;
-import eu.execom.fabut.model.TierOneType;
-import eu.execom.fabut.model.TierTwoTypeWithListProperty;
-import eu.execom.fabut.model.TierTwoTypeWithMap;
+import eu.execom.fabut.model.*;
 import eu.execom.fabut.model.test.Address;
 import eu.execom.fabut.model.test.Faculty;
 import eu.execom.fabut.model.test.Student;
 import eu.execom.fabut.model.test.Teacher;
-import eu.execom.fabut.property.IgnoredProperty;
-import eu.execom.fabut.property.MultiProperties;
-import eu.execom.fabut.property.NotNullProperty;
-import eu.execom.fabut.property.NullProperty;
-import eu.execom.fabut.property.Property;
+import eu.execom.fabut.property.*;
+import junit.framework.AssertionFailedError;
+import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class FabutTest extends AbstractFabutRepositoryAssertTest {
 
@@ -34,7 +24,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     @Test
     public void testIgnoredVarargs() {
         // setup
-        final String[] properties = new String[] {EntityTierOneType.PROPERTY, EntityTierOneType.ID};
+        final PropertyPath[] properties = new PropertyPath[]{EntityTierOneType.PROPERTY, EntityTierOneType.ID};
 
         // method
         final MultiProperties multi = Fabut.ignored(properties);
@@ -44,7 +34,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
 
         for (int i = 0; i < properties.length; i++) {
             assertTrue(multi.getProperties().get(i) instanceof IgnoredProperty);
-            assertEquals(properties[i], multi.getProperties().get(i).getPath());
+            assertEquals(properties[i].getPath(), multi.getProperties().get(i).getPath());
         }
     }
 
@@ -54,7 +44,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     @Test
     public void testNulllVarargs() {
         // setup
-        final String[] properties = new String[] {EntityTierOneType.PROPERTY, EntityTierOneType.ID};
+        final PropertyPath[] properties = new PropertyPath[]{EntityTierOneType.PROPERTY, EntityTierOneType.ID};
 
         // method
         final MultiProperties multi = Fabut.isNull(properties);
@@ -64,7 +54,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
 
         for (int i = 0; i < properties.length; i++) {
             assertTrue(multi.getProperties().get(i) instanceof NullProperty);
-            assertEquals(properties[i], multi.getProperties().get(i).getPath());
+            assertEquals(properties[i].getPath(), multi.getProperties().get(i).getPath());
         }
     }
 
@@ -74,7 +64,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     @Test
     public void testNotNullVarargs() {
         // setup
-        final String[] properties = new String[] {EntityTierOneType.PROPERTY, EntityTierOneType.ID};
+        final PropertyPath[] properties = new PropertyPath[]{EntityTierOneType.PROPERTY, EntityTierOneType.ID};
 
         // method
         final MultiProperties multi = Fabut.notNull(properties);
@@ -84,12 +74,12 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
 
         for (int i = 0; i < properties.length; i++) {
             assertTrue(multi.getProperties().get(i) instanceof NotNullProperty);
-            assertEquals(properties[i], multi.getProperties().get(i).getPath());
+            assertEquals(properties[i].getPath(), multi.getProperties().get(i).getPath());
         }
     }
 
     /**
-     * Test for {@link Fabut#notNull(String)}.
+     * Test for {@link Fabut#notNull(PropertyPath)}.
      */
     @Test
     public void testNotNull() {
@@ -97,12 +87,11 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
         final NotNullProperty notNullProperty = Fabut.notNull(EntityTierOneType.PROPERTY);
 
         // assert
-        assertTrue(notNullProperty instanceof NotNullProperty);
-        assertEquals(EntityTierOneType.PROPERTY, notNullProperty.getPath());
+        assertEquals(EntityTierOneType.PROPERTY.getPath(), notNullProperty.getPath());
     }
 
     /**
-     * Test for {@link Fabut#isNull(String)}.
+     * Test for {@link Fabut#isNull(PropertyPath)}.
      */
     @Test
     public void testNulll() {
@@ -110,12 +99,11 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
         final NullProperty nullProperty = Fabut.isNull(EntityTierOneType.PROPERTY);
 
         // assert
-        assertTrue(nullProperty instanceof NullProperty);
-        assertEquals(EntityTierOneType.PROPERTY, nullProperty.getPath());
+        assertEquals(EntityTierOneType.PROPERTY.getPath(), nullProperty.getPath());
     }
 
     /**
-     * Test for {@link Fabut#ignored(String)}.
+     * Test for {@link Fabut#ignored(PropertyPath)}.
      */
     @Test
     public void testIgnored() {
@@ -123,12 +111,11 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
         final IgnoredProperty ignoreProperty = Fabut.ignored(EntityTierOneType.PROPERTY);
 
         // assert
-        assertTrue(ignoreProperty instanceof IgnoredProperty);
-        assertEquals(EntityTierOneType.PROPERTY, ignoreProperty.getPath());
+        assertEquals(EntityTierOneType.PROPERTY.getPath(), ignoreProperty.getPath());
     }
 
     /**
-     * Test for {@link Fabut#value(String, Object)}.
+     * Test for {@link Fabut#value(PropertyPath, Object)}.
      */
     @Test
     public void testValue() {
@@ -136,9 +123,8 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
         final Property<String> changedProperty = Fabut.value(EntityTierOneType.PROPERTY, TEST);
 
         // assert
-        assertTrue(changedProperty instanceof Property<?>);
         assertEquals(TEST, changedProperty.getValue());
-        assertEquals(EntityTierOneType.PROPERTY, changedProperty.getPath());
+        assertEquals(EntityTierOneType.PROPERTY.getPath(), changedProperty.getPath());
     }
 
     /**
@@ -180,7 +166,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#takeSnapshot()} when there are entites in repository that cannot be copied.
+     * Test for {@link Fabut#takeSnapshot(Object...)} when there are entites in repository that cannot be copied.
      */
     @Test(expected = AssertionFailedError.class)
     public void testTakeSnapshotFail() {
@@ -193,7 +179,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#takeSnapshot()} when repository can be copied.
+     * Test for {@link Fabut#takeSnapshot(Object...)} when repository can be copied.
      */
     @Test
     public void testTakeSnapshotSuccess() {
@@ -641,13 +627,18 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
         Fabut.takeSnapshot();
 
         // assert
-        Fabut.assertObject(student, Fabut.value("name", "Nikola"), Fabut.value("lastName", "Olah"),
-                Fabut.value("address.city", "Temerin"), Fabut.value("address.street", "Novosadska"),
-                Fabut.value("address.streetNumber", "627"), Fabut.value("faculty.name", "PMF"),
-                Fabut.value("faculty.teacher.name", "Djura"), Fabut.value("faculty.teacher.address.city", "Kamenica"),
-                Fabut.value("faculty.teacher.address.street", "Ljubicica"),
-                Fabut.value("faculty.teacher.student", student),
-                Fabut.value("faculty.teacher.address.streetNumber", "10"));
+        Fabut.assertObject(student,
+                Fabut.value(new PropertyPath<String>("name"), "Nikola"),
+                Fabut.value(new PropertyPath<String>("lastName"), "Olah"),
+                Fabut.value(new PropertyPath<String>("address.city"), "Temerin"),
+                Fabut.value(new PropertyPath<String>("address.street"), "Novosadska"),
+                Fabut.value(new PropertyPath<String>("address.streetNumber"), "627"),
+                Fabut.value(new PropertyPath<String>("faculty.name"), "PMF"),
+                Fabut.value(new PropertyPath<String>("faculty.teacher.name"), "Djura"),
+                Fabut.value(new PropertyPath<String>("faculty.teacher.address.city"), "Kamenica"),
+                Fabut.value(new PropertyPath<String>("faculty.teacher.address.street"), "Ljubicica"),
+                Fabut.value(new PropertyPath<Student>("faculty.teacher.student"), student),
+                Fabut.value(new PropertyPath<String>("faculty.teacher.address.streetNumber"), "10"));
         Fabut.afterTest();
     }
 
