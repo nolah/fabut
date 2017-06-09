@@ -9,10 +9,7 @@ import eu.execom.fabut.property.*;
 import junit.framework.AssertionFailedError;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FabutTest extends AbstractFabutRepositoryAssertTest {
 
@@ -225,6 +222,27 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
         getEntityTierOneTypes().add(entity);
         Fabut.assertObject(entity, Fabut.value(EntityTierOneType.ID, 1),
                 Fabut.value(EntityTierOneType.PROPERTY, "test"));
+
+        Fabut.afterTest();
+
+    }
+
+    /**
+     * Test for {@link Fabut#assertObject(Object, eu.execom.fabut.property.IProperty...)} when object is entity type with list field and
+     * can be asserted.
+     */
+    @Test
+    public void testAssertObjectWithEntityTypeWithListField() {
+        // setup
+        Fabut.beforeTest(this);
+        final EntityWithList entity = new EntityWithList();
+        entity.setList(Arrays.asList(new EntityTierOneType("test", 1)));
+        entity.setId(1);
+
+        // method
+        Fabut.takeSnapshot();
+        getEntityWithListTypes().add(entity);
+        Fabut.assertObject(entity, Fabut.value(EntityWithList.ID, 1));
 
         Fabut.afterTest();
 

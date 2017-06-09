@@ -117,6 +117,10 @@ public final class ReflectionUtil {
         return object instanceof List;
     }
 
+    public static boolean isCollectionClass(final Class classs) {
+        return classs.isAssignableFrom(List.class) || classs.isAssignableFrom(Set.class) || classs.isAssignableFrom(Map.class);
+    }
+
     /**
      * Determines if specified object is instance of {@link Set}.
      *
@@ -233,10 +237,11 @@ public final class ReflectionUtil {
 
         final List<Method> getMethods = new ArrayList<Method>();
         final List<Method> getMethodsComplexType = new ArrayList<Method>();
+        final boolean isEntityClass = isEntityType(object.getClass(), types);
 
         final Method[] allMethods = object.getClass().getMethods();
         for (final Method method : allMethods) {
-            if (isGetMethod(object.getClass(), method)) {
+            if (isGetMethod(object.getClass(), method) && !(isEntityClass && isCollectionClass(method.getReturnType()))) {
                 // complex or entity type get methods inside object come last in
                 // list
                 if (isComplexType(method.getReturnType(), types) || isEntityType(method.getReturnType(), types)) {
@@ -318,10 +323,12 @@ public final class ReflectionUtil {
         }
         nodes.addPair(copy, object);
 
+        final boolean isEntityType = isEntityType(object.getClass(), types);
+
         final Class<?> classObject = object.getClass();
         for (final Method method : classObject.getMethods()) {
 
-            if (isGetMethod(object.getClass(), method) && method.getParameterAnnotations().length == 0) {
+            if (isGetMethod(object.getClass(), method) && method.getParameterAnnotations().length == 0 && !(isEntityType && isCollectionClass(method.getReturnType()))) {
                 final String propertyName = getFieldName(method);
                 final Object propertyForCopying = getPropertyForCopying(object, method);
                 final Object copiedProperty = copyProperty(propertyForCopying, nodes, types);

@@ -4,31 +4,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import eu.execom.fabut.model.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-
-import eu.execom.fabut.model.A;
-import eu.execom.fabut.model.B;
-import eu.execom.fabut.model.C;
-import eu.execom.fabut.model.DoubleLink;
-import eu.execom.fabut.model.EntityTierOneType;
-import eu.execom.fabut.model.EntityTierTwoType;
-import eu.execom.fabut.model.IgnoredMethodsType;
-import eu.execom.fabut.model.IgnoredType;
-import eu.execom.fabut.model.NoDefaultConstructorEntity;
-import eu.execom.fabut.model.NoGetMethodsType;
-import eu.execom.fabut.model.Start;
-import eu.execom.fabut.model.TierFiveType;
-import eu.execom.fabut.model.TierFourType;
-import eu.execom.fabut.model.TierOneType;
-import eu.execom.fabut.model.TierSixType;
-import eu.execom.fabut.model.TierThreeType;
-import eu.execom.fabut.model.TierTwoType;
-import eu.execom.fabut.model.TierTwoTypeWithIgnoreProperty;
-import eu.execom.fabut.model.TierTwoTypeWithListProperty;
-import eu.execom.fabut.model.TierTwoTypeWithMap;
-import eu.execom.fabut.model.TierTwoTypeWithPrimitiveProperty;
 
 /**
  * TODO add comments
@@ -42,6 +21,7 @@ public abstract class AbstractFabutRepositoryAssertTest extends Assert implement
     // mock lists
     private List<Object> entityTierOneTypes = new ArrayList<Object>();
     private List<Object> entityTierTwoTypes = new ArrayList<Object>();
+    private List<Object> entityWithListTypes = new ArrayList<Object>();
     private List<Object> noDefaultConstructorEntities = new ArrayList<Object>();
     private FabutRepositoryAssert fabutRepositoryAssert;
 
@@ -54,6 +34,7 @@ public abstract class AbstractFabutRepositoryAssertTest extends Assert implement
         final List<Class<?>> entityTypes = new LinkedList<Class<?>>();
         entityTypes.add(EntityTierOneType.class);
         entityTypes.add(EntityTierTwoType.class);
+        entityTypes.add(EntityWithList.class);
         entityTypes.add(NoDefaultConstructorEntity.class);
         return entityTypes;
     }
@@ -66,6 +47,9 @@ public abstract class AbstractFabutRepositoryAssertTest extends Assert implement
         if (entityClass == EntityTierTwoType.class) {
             return entityTierTwoTypes;
         }
+        if (entityClass == EntityWithList.class) {
+            return entityWithListTypes;
+        }
         if (entityClass == NoDefaultConstructorEntity.class) {
             return noDefaultConstructorEntities;
         }
@@ -77,6 +61,13 @@ public abstract class AbstractFabutRepositoryAssertTest extends Assert implement
         if (entityClass == EntityTierOneType.class) {
             for (final Object entity : entityTierOneTypes) {
                 if (((EntityTierOneType) entity).getId().equals(id)) {
+                    return entity;
+                }
+            }
+        }
+        if (entityClass == EntityWithList.class) {
+            for (final Object entity : entityWithListTypes) {
+                if (((EntityWithList) entity).getId().equals(id)) {
                     return entity;
                 }
             }
@@ -97,6 +88,14 @@ public abstract class AbstractFabutRepositoryAssertTest extends Assert implement
 
     public void setEntityTierOneTypes(final List<Object> list1) {
         entityTierOneTypes = list1;
+    }
+
+    public List<Object> getEntityWithListTypes() {
+        return entityWithListTypes;
+    }
+
+    public void setEntityWithListTypes(final List<Object> list1) {
+        entityWithListTypes = list1;
     }
 
     public List<Object> getEntityTierTwoTypes() {
