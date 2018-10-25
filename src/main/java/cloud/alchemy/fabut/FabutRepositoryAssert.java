@@ -433,7 +433,7 @@ class FabutRepositoryAssert extends FabutObjectAssert {
         final Object actualId = ReflectionUtil.getIdValue(pair.getActual());
         try {
             assertEquals(expectedId, actualId);
-            report.asserted(pair, propertyName);
+            //report.asserted(pair, propertyName);
             return ASSERTED;
         } catch (final AssertionError e) {
             report.assertFail(pair, propertyName);

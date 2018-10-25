@@ -207,7 +207,9 @@ class FabutObjectAssert extends Assert {
         // check if any of the expected/actual object is recurring in nodes list
         final NodeCheckType nodeCheckType = nodesList.nodeCheck(pair);
         if (nodeCheckType != NodeCheckType.NEW_PAIR) {
-            report.checkByReference(propertyName, pair.getActual(), nodeCheckType.getAssertValue());
+            if (nodeCheckType.getAssertValue()) {
+                report.checkByReference(propertyName, pair.getActual());
+            }
             return nodeCheckType.getAssertValue();
         }
         nodesList.addPair(pair);
@@ -300,7 +302,7 @@ class FabutObjectAssert extends Assert {
     boolean assertPrimitives(final FabutReportBuilder report, final String propertyName, final AssertPair pair) {
         try {
             fabutTest.customAssertEquals(pair.getExpected(), pair.getActual());
-            report.asserted(pair, propertyName);
+            //report.asserted(pair, propertyName);
             return ASSERTED;
         } catch (final AssertionError e) {
             report.assertFail(pair, propertyName);
@@ -340,14 +342,18 @@ class FabutObjectAssert extends Assert {
         // expected any not null value
         if (expected instanceof NotNullProperty) {
             final boolean ok = actual != null ? ASSERTED : ASSERT_FAIL;
-            report.notNullProperty(propertyName, ok);
+            if (!ok) {
+                report.notNullProperty(propertyName);
+            }
             return ok;
         }
 
         // expected null value
         if (expected instanceof NullProperty) {
             final boolean ok = actual == null ? ASSERTED : ASSERT_FAIL;
-            report.nullProperty(propertyName, ok);
+            if (!ok){
+                report.nullProperty(propertyName);
+            }
             return ok;
         }
 
@@ -550,7 +556,7 @@ class FabutObjectAssert extends Assert {
     ReferenceCheckType checkByReference(final FabutReportBuilder report, final AssertPair pair,
                                         final String propertyName) {
         if (pair.getExpected() == pair.getActual()) {
-            report.asserted(pair, propertyName);
+            //report.asserted(pair, propertyName);
             return ReferenceCheckType.EQUAL_REFERENCE;
         }
 

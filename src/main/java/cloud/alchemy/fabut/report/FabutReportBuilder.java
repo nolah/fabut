@@ -148,50 +148,31 @@ public class FabutReportBuilder {
     /**
      * Reports result of assertion with {@link NotNullProperty}.
      * <p>
-     * Example(asserted): <i>∞> id: expected not null property and field was not null</i>
-     * </p>
-     * <p>
-     * Example(assert fail): <i>■> id: expected not null property, but field was null</i>
+     * Example(): <i>■> id: expected not null property, but field was null</i>
      * </p>
      * 
      * @param fieldName
      *            - name of the field
-     * @param assertResult
-     *            - assert result
      */
-    public void notNullProperty(final String fieldName, final boolean assertResult) {
-        if (assertResult) {
-            final String comment = String.format("%s: expected not null property and field was not null", fieldName);
-            addComment(comment, CommentType.SUCCESS);
-        } else {
-            final String comment = String.format("%s: expected not null property, but field was null", fieldName);
-            addComment(comment, CommentType.FAIL);
-        }
+    public void notNullProperty(final String fieldName) {
+        final String comment = String.format("%s: expected not null property, but field was null", fieldName);
+        addComment(comment, CommentType.FAIL);
     }
 
     /**
      * Reports result of of assertion with {@link NullProperty}.
      * <p>
-     * Example(asserted): <i>∞> endDate: expected null and field was null</i>
-     * </p>
-     * <p>
-     * Example(asserted): <i>■> endDate: expected null, but field was not null</i>
+     * Example: <i>■> endDate: expected null, but field was not null</i>
      * </p>
      * 
      * 
      * @param fieldName
      *            - name of the field
-     * @param assertResult
-     *            - assert result
      */
-    public void nullProperty(final String fieldName, final boolean assertResult) {
-        if (assertResult) {
-            final String comment = String.format("%s: expected null property and field was null", fieldName);
-            addComment(comment, CommentType.SUCCESS);
-        } else {
-            final String comment = String.format("%s: expected null property, but field was not null", fieldName);
-            addComment(comment, CommentType.FAIL);
-        }
+    public void nullProperty(final String fieldName) {
+        final String comment = String.format("%s: expected null property, but field was not null", fieldName);
+        addComment(comment, CommentType.FAIL);
+
     }
 
     /**
@@ -211,30 +192,21 @@ public class FabutReportBuilder {
     /**
      * Reports result of reference assert.
      * <p>
-     * Example(asserted): <i>∞> Property: address of class: User has good reference.</i>
-     * </p>
-     * <p>
-     * Example(assert fail): <i>■> Property: address of class: User has wrong reference.</i>
+     * Example: <i>■> Property: address of class: User has wrong reference.</i>
      * </p>
      * 
      * @param fieldName
      *            name of the field
      * @param object
      *            the object
-     * @param asserted
-     *            assert result
      */
-    public void checkByReference(final String fieldName, final Object object, final boolean asserted) {
+    public void checkByReference(final String fieldName, final Object object) {
 
-        if (asserted) {
-            final String comment = String.format("Property:  %s of class:  %s has good reference.", fieldName, object
+
+        final String comment = String.format("Property:  %s of class:  %s has wrong reference.", fieldName, object
                     .getClass().getSimpleName());
-            addComment(comment, CommentType.SUCCESS);
-        } else {
-            final String comment = String.format("Property:  %s of class:  %s has wrong reference.", fieldName, object
-                    .getClass().getSimpleName());
-            addComment(comment, CommentType.FAIL);
-        }
+        addComment(comment, CommentType.FAIL);
+
     }
 
     /**
