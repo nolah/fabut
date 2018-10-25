@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import junit.framework.AssertionFailedError;
 
 import org.junit.Before;
@@ -482,7 +482,7 @@ public class ReflectionUtilTest extends Assert {
     /**
      * Test for createEmptyCopyOf of {@link FabutRepositoryAssert} when specified object has no default constructor.
      */
-    @Test(expected = AssertionFailedError.class)
+    @Test(expected = AssertionError.class)
     public void testCreateEmptyCopyOfNoDefaultConstructor() {
         // method
         final NoGetMethodsType assertObject = (NoGetMethodsType) ReflectionUtil.createEmptyCopyOf(new NoGetMethodsType(

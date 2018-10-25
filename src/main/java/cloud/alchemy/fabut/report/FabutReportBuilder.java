@@ -17,6 +17,7 @@ import eu.execom.fabut.property.NullProperty;
  * @author Nikola Olah
  * @author Bojan Babic
  * @author Nikola Trkulja
+ * @author Andrej Miletic
  */
 
 public class FabutReportBuilder {
@@ -62,10 +63,11 @@ public class FabutReportBuilder {
 
     /**
      * Increase indentation in report.
+     * @param parent name of parent
      */
     public void increaseDepth(final String parent) {
         if (!StringUtils.isEmpty(parent)) {
-            builder.append(addIndentation() + parent + COLON);
+            builder.append(addIndentation()).append(parent).append(COLON);
         }
         assertDepth++;
     }
@@ -87,13 +89,11 @@ public class FabutReportBuilder {
      */
     private void addComment(final String comment, final CommentType type) {
 
-        final StringBuilder part = new StringBuilder(addIndentation());
+        String part = addIndentation() + type.getMark() +
+                ARROW +
+                comment;
 
-        part.append(type.getMark());
-        part.append(ARROW);
-
-        part.append(comment);
-        builder.append(part.toString());
+        builder.append(part);
     }
 
     private String addIndentation() {
@@ -165,7 +165,7 @@ public class FabutReportBuilder {
             addComment(comment, CommentType.SUCCESS);
         } else {
             final String comment = String.format("%s: expected not null property, but field was null", fieldName);
-            addComment(comment, CommentType.SUCCESS);
+            addComment(comment, CommentType.FAIL);
         }
     }
 
@@ -175,7 +175,7 @@ public class FabutReportBuilder {
      * Example(asserted): <i>∞> endDate: expected null and field was null</i>
      * </p>
      * <p>
-     * Example(asserted): <i>∞> endDate: expected null, but field was not null</i>
+     * Example(asserted): <i>■> endDate: expected null, but field was not null</i>
      * </p>
      * 
      * 
@@ -219,8 +219,8 @@ public class FabutReportBuilder {
      * 
      * @param fieldName
      *            name of the field
-     * @param fieldClass
-     *            field class
+     * @param object
+     *            the object
      * @param asserted
      *            assert result
      */
@@ -243,17 +243,11 @@ public class FabutReportBuilder {
      * Example: <i>∞> Type Date is ignored type.</i>
      * </p>
      * 
-     * @param expected
-     *            object
-     * @param actual
-     *            object
-     * 
-     * @param generic
-     *            type
+     * @param clazz
+     *            - class of the ignored type
      */
-    public void ignoredType(final AssertPair assertPair) {
-        final String comment = String.format("Type  %s is ignored type.", assertPair.getExpected().getClass()
-                .getSimpleName());
+    public void ignoredType(final Class<?> clazz) {
+        final String comment = String.format("Type  %s is ignored type.", clazz.getSimpleName());
         addComment(comment, CommentType.SUCCESS);
     }
 
@@ -266,7 +260,7 @@ public class FabutReportBuilder {
      * @param listName
      *            - name of the list
      * @param index
-     *            - index of the element in the list beeing asserted
+     *            - index of the element in the list being asserted
      */
     public void assertingListElement(final String listName, final int index) {
         final String comment = String.format("Asserting object at index [%d] of list %s.", index, listName);
@@ -279,8 +273,8 @@ public class FabutReportBuilder {
      * Example: <i>■> Entity User [id=1] doesn't exist in DB any more but is not asserted in test.</i>
      * </p>
      * 
-     * @param propertyName
-     *            - property name
+     * @param entity
+     *            - the entity that doesn't exist in DB anymore
      */
     public void noEntityInSnapshot(final Object entity) {
         final String comment = String.format("Entity %s doesn't exist in DB any more but is not asserted in test.",
@@ -292,7 +286,7 @@ public class FabutReportBuilder {
      * Reports failure when entity in current snapshot doesn't have matching entity in before snapshot and isn't
      * asserted in test.
      * <p>
-     * Example: <i>■> Entity User [id=100] is created in system after last snapshot but hasnt been asserted in
+     * Example: <i>■> Entity User [id=100] is created in system after last snapshot but hasn't been asserted in
      * test..</i>
      * </p>
      * 
@@ -301,7 +295,7 @@ public class FabutReportBuilder {
      */
     public void entityNotAssertedInAfterState(final Object entity) {
         final String comment = String.format(
-                "Entity %s is created in system after last snapshot but hasnt been asserted in test.", entity);
+                "Entity %s is created in system after last snapshot but hasn't been asserted in test.", entity);
         addComment(comment, CommentType.FAIL);
     }
 
@@ -313,8 +307,10 @@ public class FabutReportBuilder {
      * </p>
      * 
      * 
-     * @param methodName
-     *            - name of the method
+     * @param method
+     *            - the method
+     * @param actual
+     *            - object reference for asserting
      */
     public void uncallableMethod(final Method method, final Object actual) {
         final String comment = String.format(
@@ -326,11 +322,9 @@ public class FabutReportBuilder {
     /**
      * Reports fail due to passing null object reference for asserting.
      * <p>
-     * Example: <i>■> Asserting cannot be null!</i>
+     * Example: <i>■> Object that was passed to assertObject was null, it must not be null!</i>
      * </p>
-     * 
-     * @param actual
-     *            object reference for asserting
+     *
      */
     public void nullReference() {
         final String comment = "Object that was passed to assertObject was null, it must not be null!";
@@ -378,24 +372,10 @@ public class FabutReportBuilder {
      * </p>
      * 
      * @param clazz
-     *            the clazz
+     *            the class whose id is null
      */
     public void idNull(final Class<?> clazz) {
         final String comment = String.format("Id of %s cannot be null", clazz.getSimpleName());
-        addComment(comment, CommentType.FAIL);
-    }
-
-    /**
-     * Reports that specified type of entity doesn't exist in snapshot.
-     * <p>
-     * Example: <i>■> Entity: User [id=100] cannot be found in snapshot</i>
-     * </p>
-     * 
-     * @param entity
-     *            the entity
-     */
-    public void notExistingInSnapshot(final Object entity) {
-        final String comment = String.format("Entity: %s cannot be found in snapshot", entity);
         addComment(comment, CommentType.FAIL);
     }
 
@@ -408,7 +388,7 @@ public class FabutReportBuilder {
      * @param entity
      *            the entity
      */
-    public void notDeletedInRepositoy(final Object entity) {
+    public void notDeletedInRepository(final Object entity) {
         final String comment = String.format("Entity: %s was not deleted in repository", entity);
         addComment(comment, CommentType.FAIL);
     }
@@ -433,7 +413,7 @@ public class FabutReportBuilder {
      * Example: <i>■> No match for expected key: first </i>
      * </p>
      * 
-     * @param key
+     * @param key map key
      */
     public void excessExpectedMap(final Object key) {
         final String comment = String.format("No match for expected key: %s", key);
@@ -446,7 +426,7 @@ public class FabutReportBuilder {
      * Example: <i>■> No match for actual key: first </i>
      * </p>
      * 
-     * @param key
+     * @param key map key
      */
     public void excessActualMap(final Object key) {
         final String comment = String.format("No match for actual key: %s", key);
@@ -456,10 +436,10 @@ public class FabutReportBuilder {
     /**
      * Reports asserting map element by key.
      * <p>
-     * Example: <i>#> Map key: first </i>
+     * Example: <i>#\\> Map key: first </i>
      * </p>
      * 
-     * @param key
+     * @param key map key
      */
     public void assertingMapKey(final Object key) {
         final String comment = String.format("Map key: %s", key);

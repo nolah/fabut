@@ -17,6 +17,7 @@ import java.util.*;
  * @author Nikola Olah
  * @author Bojan Babic
  * @author Nikola Trkulja
+ * @author Andrej Miletic
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public final class ReflectionUtil {
@@ -94,7 +95,7 @@ public final class ReflectionUtil {
      *
      * @param fieldClass class of the field.
      * @param fieldName  name of the field
-     * @return {@link Field} with specified name, otherwise <code>null</code>>
+     * @return {@link Field} with specified name, otherwise <code>null</code>
      */
     public static Field findField(final Class<?> fieldClass, final String fieldName) {
         if (fieldClass == null) {
@@ -134,8 +135,8 @@ public final class ReflectionUtil {
     /**
      * Determines if specified object is instance of {@link Map}.
      *
-     * @param object
-     * @return
+     * @param object the object that is checked
+     * @return <code>true</code> if it is a map, <code>false</code> otherwise
      */
     public static boolean isMapType(final Object object) {
         return object instanceof Map;
@@ -144,8 +145,8 @@ public final class ReflectionUtil {
     /**
      * Check if specified class is contained in entity types.
      *
-     * @param object      thats checked
-     * @param entityTypes list of entity types
+     * @param object that's checked
+     * @param types map of all types by their Assertable type
      * @return <code>true</code> if specified class is contained in entity types, <code>false</code> otherwise.
      */
     public static boolean isEntityType(final Class<?> object, final Map<AssertableType, List<Class<?>>> types) {
@@ -154,7 +155,7 @@ public final class ReflectionUtil {
 
             final boolean isEntity = types.get(AssertableType.ENTITY_TYPE).contains(object);
 
-            // necessary tweek for hibernate beans witch in some cases are fetched as proxy objects
+            // necessary tweak for hibernate beans witch in some cases are fetched as proxy objects
             final boolean isSuperClassEntity = types.get(AssertableType.ENTITY_TYPE).contains(object.getSuperclass());
             return isEntity || isSuperClassEntity;
         }
@@ -164,8 +165,8 @@ public final class ReflectionUtil {
     /**
      * Check if specified class is contained in complex types.
      *
-     * @param classs       thats checking
-     * @param complexTypes the complex types
+     * @param classs       that's checking
+     * @param types map of all types by their Assertable type
      * @return <code>true</code> if specified class is contained in complex types, <code>false</code> otherwise.
      */
     public static boolean isComplexType(final Class<?> classs, final Map<AssertableType, List<Class<?>>> types) {
@@ -176,7 +177,7 @@ public final class ReflectionUtil {
      * Check if specified class is contained in ignored types.
      *
      * @param classs       thats checked
-     * @param ignoredTypes list of ignored types
+     * @param types map of all types by their Assertable type
      * @return <code>true</code> if specified class is contained in ignored types, <code>false</code> otherwise.
      */
     public static boolean isIgnoredType(final Class<?> classs, final Map<AssertableType, List<Class<?>>> types) {
@@ -188,7 +189,7 @@ public final class ReflectionUtil {
      *
      * @param firstObject  that is checked
      * @param secondObject that is checked
-     * @param ignoredTypes list of ignored type
+     * @param types map of all types by their Assertable type
      * @return <code>true</code> if type of expected or actual is ignored type, <code>false</code> otherwise.
      */
     public static boolean isIgnoredType(final Object firstObject, final Object secondObject,
@@ -207,9 +208,6 @@ public final class ReflectionUtil {
 
     /**
      * Gets entity's id value.
-     *
-     * @param type   of entity
-     * @param <Id>   entities id type
      * @param entity - entity from which id is taken
      * @return {@link Number} if specified entity id field and matching get method, <code>null</code> otherwise.
      */
@@ -227,10 +225,8 @@ public final class ReflectionUtil {
      * those methods who have matching property in the class with the name equal to get method's name uncapitalized and
      * without "get" prefix.
      *
-     * @param the          generic type
      * @param object       instance of class X
-     * @param complexTypes the complex types
-     * @param entityTypes  the entity types
+     * @param types map of all types by their Assertable type
      * @return {@link List} of real "get" methods of class X
      */
     public static List<Method> getGetMethods(final Object object, final Map<AssertableType, List<Class<?>>> types) {
@@ -242,8 +238,7 @@ public final class ReflectionUtil {
         final Method[] allMethods = object.getClass().getMethods();
         for (final Method method : allMethods) {
             if (isGetMethod(object.getClass(), method) && !(isEntityClass && isCollectionClass(method.getReturnType()))) {
-                // complex or entity type get methods inside object come last in
-                // list
+                // complex or entity type get methods inside object come last in list
                 if (isComplexType(method.getReturnType(), types) || isEntityType(method.getReturnType(), types)) {
                     getMethodsComplexType.add(method);
                 } else {
@@ -259,10 +254,10 @@ public final class ReflectionUtil {
     /**
      * Gets the object get method named.
      *
-     * @param the        generic type
      * @param methodName the method name
      * @param object     the object
      * @return the object get method named
+     * @throws Exception if it can't get the method
      */
     public static Method getGetMethod(final String methodName, final Object object) throws Exception {
         return object.getClass().getMethod(methodName);
@@ -373,8 +368,10 @@ public final class ReflectionUtil {
      * Copies property.
      *
      * @param propertyForCopying property for copying
-     * @param nodes              list of objects that had been copied
+     * @param nodes list of objects that had been copied
+     * @param types map of all types by their Assertable type
      * @return copied property
+     * @throws  CopyException if it can't make a copy of property
      */
     public static Object copyProperty(final Object propertyForCopying, final NodesList nodes,
                                       final Map<AssertableType, List<Class<?>>> types) throws CopyException {
@@ -410,10 +407,10 @@ public final class ReflectionUtil {
     /**
      * Creates a copy of specified map.
      *
-     * @param propertyForCopying
-     * @param types
-     * @return
-     * @throws CopyException
+     * @param propertyForCopying property that is to be copied
+     * @param types map of all types by their Assertable type
+     * @return copy of the map
+     * @throws CopyException if can't make a copy
      */
     public static Object copyMap(final Map propertyForCopying, final Map<AssertableType, List<Class<?>>> types)
             throws CopyException {
@@ -429,7 +426,9 @@ public final class ReflectionUtil {
      *
      * @param <T>  type objects in the list
      * @param list list for copying
+     * @param types map of all types by their Assertable type
      * @return copied list
+     * @throws CopyException the copy exception
      */
     public static <T> List<T> copyList(final List<T> list, final Map<AssertableType, List<Class<?>>> types)
             throws CopyException {
@@ -445,7 +444,9 @@ public final class ReflectionUtil {
      *
      * @param <T> type objects in the set
      * @param set set for copying
+     * @param types map of all types by their Assertable type
      * @return copied list
+     * @throws CopyException the copy exception
      */
     public static <T> Set<T> copySet(final Set<T> set, final Map<AssertableType, List<Class<?>>> types)
             throws CopyException {

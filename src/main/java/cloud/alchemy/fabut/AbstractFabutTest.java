@@ -19,7 +19,7 @@ public abstract class AbstractFabutTest extends Fabut implements IFabutTest {
     @Override
     public void fabutBeforeTest() {
         Fabut.beforeTest(this);
-    };
+    }
 
     @Override
     @After

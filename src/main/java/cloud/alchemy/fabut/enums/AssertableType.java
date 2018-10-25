@@ -1,6 +1,7 @@
 package eu.execom.fabut.enums;
 
 import java.util.Map;
+import java.util.List;
 
 /**
  * Types assertable by FABUT.

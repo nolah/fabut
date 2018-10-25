@@ -3,7 +3,7 @@ package eu.execom.fabut.util;
 import java.util.List;
 
 import eu.execom.fabut.property.*;
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

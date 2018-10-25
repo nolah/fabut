@@ -13,12 +13,14 @@ import eu.execom.fabut.util.ConversionUtil;
  * Set of method for advanced asserting.
  * 
  * @author Dusko Vesin
+ * @author Andrej Miletic
  * 
  */
 public class Fabut {
 
     private static FabutRepositoryAssert fabutAssert = null;
     private static AssertType assertType;
+    private static boolean assertPassed;
 
     /**
      * Private constructor to forbid instancing this class.
@@ -34,6 +36,7 @@ public class Fabut {
      *            the test instance
      */
     public static synchronized void beforeTest(final Object testInstance) {
+        assertPassed = true;
         assertType = ConversionUtil.getAssertType(testInstance);
         switch (assertType) {
         case OBJECT_ASSERT:
@@ -56,20 +59,21 @@ public class Fabut {
         boolean ok = true;
         final StringBuilder sb = new StringBuilder();
 
-        final FabutReportBuilder parameterReport = new FabutReportBuilder("Parameter snapshot assert");
-        if (!fabutAssert.assertParameterSnapshot(parameterReport)) {
-            ok = false;
-            sb.append(parameterReport.getMessage());
-        }
-
-        final FabutReportBuilder snapshotReport = new FabutReportBuilder("Repository snapshot assert");
-        if (assertType == AssertType.REPOSITORY_ASSERT) {
-            if (!fabutAssert.assertDbSnapshot(snapshotReport)) {
+        if (assertPassed) {
+            final FabutReportBuilder parameterReport = new FabutReportBuilder("Parameter snapshot assert");
+            if (!fabutAssert.assertParameterSnapshot(parameterReport)) {
                 ok = false;
-                sb.append(snapshotReport.getMessage());
+                sb.append(parameterReport.getMessage());
+            }
+
+            final FabutReportBuilder snapshotReport = new FabutReportBuilder("Repository snapshot assert");
+            if (assertType == AssertType.REPOSITORY_ASSERT) {
+                if (!fabutAssert.assertDbSnapshot(snapshotReport)) {
+                    ok = false;
+                    sb.append(snapshotReport.getMessage());
+                }
             }
         }
-
         if (!ok) {
             throw new AssertionFailedError(sb.toString());
         }
@@ -78,6 +82,7 @@ public class Fabut {
 
     /**
      * Creates repository snapshot so it can be asserted with after state after the test execution.
+     * @param parameters array of parameters for snapshot
      */
     public static void takeSnapshot(final Object... parameters) {
         checkValidInit();
@@ -105,7 +110,7 @@ public class Fabut {
 
         final FabutReportBuilder report = new FabutReportBuilder(message);
         if (!fabutAssert.assertObjectWithProperties(report, object, fabutAssert.extractProperties(properties))) {
-
+            assertPassed = false;
             throw new AssertionFailedError(report.getMessage());
         }
     }
@@ -141,7 +146,7 @@ public class Fabut {
 
         final FabutReportBuilder report = new FabutReportBuilder(message);
         if (!fabutAssert.assertObjects(report, expected, actual, fabutAssert.extractProperties(expectedChanges))) {
-
+            assertPassed = false;
             throw new AssertionFailedError(report.getMessage());
         }
     }
@@ -188,7 +193,7 @@ public class Fabut {
 
         final FabutReportBuilder report = new FabutReportBuilder();
         if (!fabutAssert.assertEntityWithSnapshot(report, entity, fabutAssert.extractProperties(expectedChanges))) {
-
+            assertPassed = false;
             throw new AssertionFailedError(report.getMessage());
         }
     }
@@ -205,7 +210,7 @@ public class Fabut {
 
         final FabutReportBuilder report = new FabutReportBuilder();
         if (!fabutAssert.markAsAsserted(report, entity, entity.getClass())) {
-
+            assertPassed = false;
             throw new AssertionFailedError(report.getMessage());
         }
     }
@@ -222,7 +227,7 @@ public class Fabut {
 
         final FabutReportBuilder report = new FabutReportBuilder();
         if (!fabutAssert.assertEntityAsDeleted(report, entity)) {
-
+            assertPassed = false;
             throw new AssertionFailedError(report.getMessage());
         }
     }
@@ -239,7 +244,7 @@ public class Fabut {
 
         final FabutReportBuilder report = new FabutReportBuilder();
         if (!fabutAssert.ignoreEntity(report, entity)) {
-
+            assertPassed = false;
             throw new AssertionFailedError(report.getMessage());
         }
     }

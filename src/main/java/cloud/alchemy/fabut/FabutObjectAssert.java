@@ -11,7 +11,7 @@ import eu.execom.fabut.property.*;
 import eu.execom.fabut.report.FabutReportBuilder;
 import eu.execom.fabut.util.ConversionUtil;
 import eu.execom.fabut.util.ReflectionUtil;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
@@ -26,6 +26,7 @@ import java.util.*;
  * @author Nikola Olah
  * @author Bojan Babic
  * @author Nikola Trkulja
+ * @author Andrej Miletic
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 class FabutObjectAssert extends Assert {
@@ -200,7 +201,7 @@ class FabutObjectAssert extends Assert {
             return referenceCheck.isAssertResult();
         }
         if (referenceCheck == ReferenceCheckType.EXCLUSIVE_NULL) {
-            referenceCheck.isAssertResult();
+            return referenceCheck.isAssertResult();
         }
 
         // check if any of the expected/actual object is recurring in nodes list
@@ -212,7 +213,7 @@ class FabutObjectAssert extends Assert {
         nodesList.addPair(pair);
         switch (pair.getObjectType()) {
             case IGNORED_TYPE:
-                report.ignoredType(pair);
+                report.ignoredType(pair.getExpected().getClass());
                 return ASSERTED;
             case COMPLEX_TYPE:
                 return assertSubfields(report, pair, properties, nodesList, propertyName);

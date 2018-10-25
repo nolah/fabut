@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import eu.execom.fabut.enums.AssertType;
 import eu.execom.fabut.enums.AssertableType;
 import eu.execom.fabut.exception.CopyException;
@@ -81,7 +81,7 @@ class FabutRepositoryAssert extends FabutObjectAssert {
         final boolean isDeletedInRepository = findById == null;
 
         if (!isDeletedInRepository) {
-            report.notDeletedInRepositoy(entity);
+            report.notDeletedInRepository(entity);
         }
         return ignoreEntity && isDeletedInRepository;
     }
@@ -199,7 +199,7 @@ class FabutRepositoryAssert extends FabutObjectAssert {
             return ASSERT_FAIL;
         }
 
-        return markAsserted(report, id, copy, actualType);
+        return markAsserted(id, copy, actualType);
     }
 
     /**
@@ -213,7 +213,7 @@ class FabutRepositoryAssert extends FabutObjectAssert {
      *            the actual type
      * @return true, if successful
      */
-    protected boolean markAsserted(final FabutReportBuilder report, final Object id, final Object copy,
+    protected boolean markAsserted(final Object id, final Object copy,
             final Class<?> actualType) {
         final Map<Object, CopyAssert> map = dbSnapshot.get(actualType);
         final boolean isTypeSupported = map != null;
@@ -228,7 +228,7 @@ class FabutRepositoryAssert extends FabutObjectAssert {
 
         final Class<?> superClassType = actualType.getSuperclass();
         final boolean isSuperSuperTypeSupported = (superClassType != null)
-                && markAsserted(report, id, copy, superClassType);
+                && markAsserted(id, copy, superClassType);
 
         final boolean marked = isTypeSupported || isSuperSuperTypeSupported;
         return marked;
