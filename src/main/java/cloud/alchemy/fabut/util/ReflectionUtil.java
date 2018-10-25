@@ -1,8 +1,8 @@
-package eu.execom.fabut.util;
+package cloud.alchemy.fabut.util;
 
-import eu.execom.fabut.enums.AssertableType;
-import eu.execom.fabut.exception.CopyException;
-import eu.execom.fabut.graph.NodesList;
+import cloud.alchemy.fabut.enums.AssertableType;
+import cloud.alchemy.fabut.exception.CopyException;
+import cloud.alchemy.fabut.graph.NodesList;
 import junit.framework.AssertionFailedError;
 import org.apache.commons.lang3.StringUtils;
 

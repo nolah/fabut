@@ -1,11 +1,10 @@
-package eu.execom.fabut;
+package cloud.alchemy.fabut;
 
+import cloud.alchemy.fabut.model.EntityTierOneType;
+import cloud.alchemy.fabut.property.CopyAssert;
 import org.junit.Assert;
 
 import org.junit.Test;
-
-import eu.execom.fabut.model.EntityTierOneType;
-import eu.execom.fabut.property.CopyAssert;
 
 /**
  * Test class for {@link CopyAssert}.

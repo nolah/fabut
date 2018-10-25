@@ -1,4 +1,4 @@
-package eu.execom.fabut.model.test;
+package cloud.alchemy.fabut.model.test;
 
 public class Student {
 

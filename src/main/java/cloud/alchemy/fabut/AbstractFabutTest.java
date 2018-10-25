@@ -1,4 +1,4 @@
-package eu.execom.fabut;
+package cloud.alchemy.fabut;
 
 import org.junit.After;
 import org.junit.Before;

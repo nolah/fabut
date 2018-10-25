@@ -1,13 +1,13 @@
-package eu.execom.fabut.report;
+package cloud.alchemy.fabut.report;
 
 import java.lang.reflect.Method;
 
+import cloud.alchemy.fabut.enums.CommentType;
+import cloud.alchemy.fabut.pair.AssertPair;
 import org.apache.commons.lang3.StringUtils;
 
-import eu.execom.fabut.enums.CommentType;
-import eu.execom.fabut.pair.AssertPair;
-import eu.execom.fabut.property.NotNullProperty;
-import eu.execom.fabut.property.NullProperty;
+import cloud.alchemy.fabut.property.NotNullProperty;
+import cloud.alchemy.fabut.property.NullProperty;
 
 /**
  * Report builder used for creating clean and readable reports. Its point is to emphasize failed asserts so developer

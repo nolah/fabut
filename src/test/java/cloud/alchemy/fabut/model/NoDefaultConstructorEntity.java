@@ -1,4 +1,4 @@
-package eu.execom.fabut.model;
+package cloud.alchemy.fabut.model;
 
 public class NoDefaultConstructorEntity extends NoDefaultConstructorType {
 

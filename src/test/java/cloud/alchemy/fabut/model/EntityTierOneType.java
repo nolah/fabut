@@ -1,9 +1,9 @@
 /*
  * 
  */
-package eu.execom.fabut.model;
+package cloud.alchemy.fabut.model;
 
-import eu.execom.fabut.property.PropertyPath;
+import cloud.alchemy.fabut.property.PropertyPath;
 
 /**
  * Tier one entity type with id and one {@link String} property.

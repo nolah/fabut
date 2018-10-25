@@ -1,10 +1,10 @@
-package eu.execom.fabut;
+package cloud.alchemy.fabut;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import eu.execom.fabut.model.*;
+import cloud.alchemy.fabut.model.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

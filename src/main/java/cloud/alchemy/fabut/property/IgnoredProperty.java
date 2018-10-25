@@ -1,4 +1,4 @@
-package eu.execom.fabut.property;
+package cloud.alchemy.fabut.property;
 
 /**
  * The Class IgnoreProperty. {@link AbstractSingleProperty} extension with limited functionality only to mark property

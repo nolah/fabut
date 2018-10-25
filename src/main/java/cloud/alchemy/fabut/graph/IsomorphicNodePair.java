@@ -1,6 +1,6 @@
-package eu.execom.fabut.graph;
+package cloud.alchemy.fabut.graph;
 
-import eu.execom.fabut.pair.Pair;
+import cloud.alchemy.fabut.pair.Pair;
 
 /**
  * Class representing object pair from {@link IsomorphicGraph}.

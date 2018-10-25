@@ -1,28 +1,28 @@
-package eu.execom.fabut.util;
+package cloud.alchemy.fabut.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import cloud.alchemy.fabut.enums.AssertableType;
+import cloud.alchemy.fabut.exception.CopyException;
+import cloud.alchemy.fabut.graph.NodesList;
 import org.junit.Assert;
 import junit.framework.AssertionFailedError;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.execom.fabut.enums.AssertableType;
-import eu.execom.fabut.exception.CopyException;
-import eu.execom.fabut.graph.NodesList;
-import eu.execom.fabut.model.A;
-import eu.execom.fabut.model.B;
-import eu.execom.fabut.model.BooleanFieldType;
-import eu.execom.fabut.model.C;
-import eu.execom.fabut.model.EntityTierOneType;
-import eu.execom.fabut.model.EntityTierTwoType;
-import eu.execom.fabut.model.NoGetMethodsType;
-import eu.execom.fabut.model.TierOneType;
-import eu.execom.fabut.model.TierTwoType;
-import eu.execom.fabut.model.UnknownType;
+import cloud.alchemy.fabut.model.A;
+import cloud.alchemy.fabut.model.B;
+import cloud.alchemy.fabut.model.BooleanFieldType;
+import cloud.alchemy.fabut.model.C;
+import cloud.alchemy.fabut.model.EntityTierOneType;
+import cloud.alchemy.fabut.model.EntityTierTwoType;
+import cloud.alchemy.fabut.model.NoGetMethodsType;
+import cloud.alchemy.fabut.model.TierOneType;
+import cloud.alchemy.fabut.model.TierTwoType;
+import cloud.alchemy.fabut.model.UnknownType;
 
 /**
  * Tests for {@link ReflectionUtil}.

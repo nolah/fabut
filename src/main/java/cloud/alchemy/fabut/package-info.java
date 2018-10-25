@@ -6,5 +6,5 @@
  * @author Bojan Babic
  * @author Nikola Trkulja
  */
-package eu.execom.fabut;
+package cloud.alchemy.fabut;
 

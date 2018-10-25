@@ -1,6 +1,6 @@
-package eu.execom.fabut.pair;
+package cloud.alchemy.fabut.pair;
 
-import eu.execom.fabut.enums.AssertableType;
+import cloud.alchemy.fabut.enums.AssertableType;
 
 /**
  * Represents expected and actual pair during asserting with information of what type is the pair and if expected/actual are

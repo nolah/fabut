@@ -1,4 +1,4 @@
-package eu.execom.fabut.property;
+package cloud.alchemy.fabut.property;
 
 /**
  * Property interface.

@@ -1,4 +1,4 @@
-package eu.execom.fabut.property;
+package cloud.alchemy.fabut.property;
 
 /**
  * Abstract property definition that contains path to some property that is used.

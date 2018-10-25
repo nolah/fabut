@@ -1,4 +1,4 @@
-package eu.execom.fabut;
+package cloud.alchemy.fabut;
 
 /**
  * TODO add comments.

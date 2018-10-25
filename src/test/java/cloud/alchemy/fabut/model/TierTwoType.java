@@ -1,6 +1,6 @@
-package eu.execom.fabut.model;
+package cloud.alchemy.fabut.model;
 
-import eu.execom.fabut.property.PropertyPath;
+import cloud.alchemy.fabut.property.PropertyPath;
 
 /**
  * Class representing tier two objects with one complex object property.

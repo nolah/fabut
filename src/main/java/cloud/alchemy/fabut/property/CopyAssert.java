@@ -1,4 +1,4 @@
-package eu.execom.fabut.property;
+package cloud.alchemy.fabut.property;
 
 /**
  * Intermediate object that stores entity and info is the entity asserted or not.

@@ -1,11 +1,11 @@
-package eu.execom.fabut;
+package cloud.alchemy.fabut;
 
-import eu.execom.fabut.model.*;
-import eu.execom.fabut.model.test.Address;
-import eu.execom.fabut.model.test.Faculty;
-import eu.execom.fabut.model.test.Student;
-import eu.execom.fabut.model.test.Teacher;
-import eu.execom.fabut.property.*;
+import cloud.alchemy.fabut.model.*;
+import cloud.alchemy.fabut.model.test.Address;
+import cloud.alchemy.fabut.model.test.Faculty;
+import cloud.alchemy.fabut.model.test.Student;
+import cloud.alchemy.fabut.model.test.Teacher;
+import cloud.alchemy.fabut.property.*;
 import junit.framework.AssertionFailedError;
 import org.junit.Test;
 
@@ -191,7 +191,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertObject(Object, eu.execom.fabut.property.IProperty...)} when object is complex type
+     * Test for {@link Fabut#assertObject(Object, IProperty...)} when object is complex type
      * and can be asserted.
      */
     @Test
@@ -206,7 +206,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertObject(Object, eu.execom.fabut.property.IProperty...)} when object is entity type and
+     * Test for {@link Fabut#assertObject(Object, IProperty...)} when object is entity type and
      * can be asserted.
      */
     @Test
@@ -228,7 +228,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertObject(Object, eu.execom.fabut.property.IProperty...)} when object is entity type with list field and
+     * Test for {@link Fabut#assertObject(Object, IProperty...)} when object is entity type with list field and
      * can be asserted.
      */
     @Test
@@ -249,7 +249,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertObject(Object, eu.execom.fabut.property.IProperty...)} when object is entity and
+     * Test for {@link Fabut#assertObject(Object, IProperty...)} when object is entity and
      * cannot be asserted.
      */
     @Test(expected = AssertionFailedError.class)
@@ -269,7 +269,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertObjects(Object, Object, eu.execom.fabut.property.IProperty...)} when specified
+     * Test for {@link Fabut#assertObjects(Object, Object, IProperty...)} when specified
      * objects are complex types and can be asserted.
      */
     @Test
@@ -285,7 +285,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertObjects(Object, Object, eu.execom.fabut.property.IProperty...)} when specified
+     * Test for {@link Fabut#assertObjects(Object, Object, IProperty...)} when specified
      * objects are complex types and assert fails.
      */
     @Test(expected = AssertionFailedError.class)
@@ -301,7 +301,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertObjects(Object, Object, eu.execom.fabut.property.IProperty...)} when specified
+     * Test for {@link Fabut#assertObjects(Object, Object, IProperty...)} when specified
      * objects are complex types and property difference is used for assert.
      */
     @Test
@@ -351,7 +351,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertObjects(Object, Object, eu.execom.fabut.property.IProperty...)} when specified
+     * Test for {@link Fabut#assertObjects(Object, Object, IProperty...)} when specified
      * objects are entities and can be asserted.
      */
     @Test
@@ -371,7 +371,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertObjects(Object, Object, eu.execom.fabut.property.IProperty...)} when specified
+     * Test for {@link Fabut#assertObjects(Object, Object, IProperty...)} when specified
      * objects are entities and cannot be asserted.
      */
     @Test(expected = AssertionFailedError.class)
@@ -391,7 +391,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertEntityWithSnapshot(Object, eu.execom.fabut.property.IProperty...)} when entity can be
+     * Test for {@link Fabut#assertEntityWithSnapshot(Object, IProperty...)} when entity can be
      * asserted with one in snapshot.
      */
     @Test
@@ -412,7 +412,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertEntityWithSnapshot(Object, eu.execom.fabut.property.IProperty...)} when entity cannot
+     * Test for {@link Fabut#assertEntityWithSnapshot(Object, IProperty...)} when entity cannot
      * be asserted with one in snapshot.
      */
     @Test(expected = AssertionFailedError.class)
@@ -433,7 +433,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Test for {@link Fabut#assertEntityWithSnapshot(Object, eu.execom.fabut.property.IProperty...)} when specified
+     * Test for {@link Fabut#assertEntityWithSnapshot(Object, IProperty...)} when specified
      * object is not an entity.
      */
     @Test(expected = IllegalStateException.class)
@@ -615,7 +615,7 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     }
 
     /**
-     * Integration test for {@link Fabut#assertObject(Object, eu.execom.fabut.property.IProperty...)} when inner
+     * Integration test for {@link Fabut#assertObject(Object, IProperty...)} when inner
      * properties are used for asserting.
      */
     @Test

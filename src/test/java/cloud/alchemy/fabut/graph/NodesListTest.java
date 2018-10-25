@@ -1,12 +1,10 @@
-package eu.execom.fabut.graph;
+package cloud.alchemy.fabut.graph;
 
+import cloud.alchemy.fabut.enums.NodeCheckType;
+import cloud.alchemy.fabut.model.TierOneType;
 import org.junit.Assert;
 
 import org.junit.Test;
-
-import eu.execom.fabut.enums.NodeCheckType;
-import eu.execom.fabut.graph.NodesList;
-import eu.execom.fabut.model.TierOneType;
 
 /**
  * Tests for {@link NodesList}.

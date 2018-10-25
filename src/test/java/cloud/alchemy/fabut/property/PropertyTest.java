@@ -1,10 +1,10 @@
-package eu.execom.fabut.property;
+package cloud.alchemy.fabut.property;
 
+import cloud.alchemy.fabut.model.EntityTierOneType;
 import org.junit.Assert;
 import org.junit.Test;
 
-import eu.execom.fabut.Fabut;
-import eu.execom.fabut.model.EntityTierOneType;
+import cloud.alchemy.fabut.Fabut;
 
 /**
  * Tests for {@link AbstractSingleProperty}.

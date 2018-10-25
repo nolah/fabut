@@ -1,33 +1,33 @@
-package eu.execom.fabut;
+package cloud.alchemy.fabut;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import cloud.alchemy.fabut.model.test.Address;
+import cloud.alchemy.fabut.model.test.Faculty;
+import cloud.alchemy.fabut.model.test.Student;
+import cloud.alchemy.fabut.model.test.Teacher;
 import org.junit.Assert;
 
 import org.junit.Before;
 
-import eu.execom.fabut.model.A;
-import eu.execom.fabut.model.B;
-import eu.execom.fabut.model.C;
-import eu.execom.fabut.model.DoubleLink;
-import eu.execom.fabut.model.IgnoredMethodsType;
-import eu.execom.fabut.model.IgnoredType;
-import eu.execom.fabut.model.NoGetMethodsType;
-import eu.execom.fabut.model.Start;
-import eu.execom.fabut.model.TierFiveType;
-import eu.execom.fabut.model.TierFourType;
-import eu.execom.fabut.model.TierOneType;
-import eu.execom.fabut.model.TierSixType;
-import eu.execom.fabut.model.TierThreeType;
-import eu.execom.fabut.model.TierTwoType;
-import eu.execom.fabut.model.TierTwoTypeWithIgnoreProperty;
-import eu.execom.fabut.model.TierTwoTypeWithListProperty;
-import eu.execom.fabut.model.TierTwoTypeWithPrimitiveProperty;
-import eu.execom.fabut.model.test.Address;
-import eu.execom.fabut.model.test.Faculty;
-import eu.execom.fabut.model.test.Student;
-import eu.execom.fabut.model.test.Teacher;
+import cloud.alchemy.fabut.model.A;
+import cloud.alchemy.fabut.model.B;
+import cloud.alchemy.fabut.model.C;
+import cloud.alchemy.fabut.model.DoubleLink;
+import cloud.alchemy.fabut.model.IgnoredMethodsType;
+import cloud.alchemy.fabut.model.IgnoredType;
+import cloud.alchemy.fabut.model.NoGetMethodsType;
+import cloud.alchemy.fabut.model.Start;
+import cloud.alchemy.fabut.model.TierFiveType;
+import cloud.alchemy.fabut.model.TierFourType;
+import cloud.alchemy.fabut.model.TierOneType;
+import cloud.alchemy.fabut.model.TierSixType;
+import cloud.alchemy.fabut.model.TierThreeType;
+import cloud.alchemy.fabut.model.TierTwoType;
+import cloud.alchemy.fabut.model.TierTwoTypeWithIgnoreProperty;
+import cloud.alchemy.fabut.model.TierTwoTypeWithListProperty;
+import cloud.alchemy.fabut.model.TierTwoTypeWithPrimitiveProperty;
 
 /**
  * TODO add comments

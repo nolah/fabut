@@ -1,4 +1,4 @@
-package eu.execom.fabut.model;
+package cloud.alchemy.fabut.model;
 
 /**
  * Enity type with one {@link EntityTierOneType} sub property and one {@link String} property.

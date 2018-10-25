@@ -1,4 +1,4 @@
-package eu.execom.fabut.enums;
+package cloud.alchemy.fabut.enums;
 
 import java.util.Map;
 import java.util.List;

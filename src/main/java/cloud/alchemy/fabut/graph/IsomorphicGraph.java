@@ -1,6 +1,6 @@
-package eu.execom.fabut.graph;
+package cloud.alchemy.fabut.graph;
 
-import eu.execom.fabut.enums.NodeCheckType;
+import cloud.alchemy.fabut.enums.NodeCheckType;
 
 /**
  * Interface representing isomorphic object graphs structure.

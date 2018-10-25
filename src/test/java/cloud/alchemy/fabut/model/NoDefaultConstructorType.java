@@ -1,4 +1,4 @@
-package eu.execom.fabut.model;
+package cloud.alchemy.fabut.model;
 
 /**
  * Class with no default constructor.

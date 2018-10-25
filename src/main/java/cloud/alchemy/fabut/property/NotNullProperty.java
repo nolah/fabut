@@ -1,4 +1,4 @@
-package eu.execom.fabut.property;
+package cloud.alchemy.fabut.property;
 
 /**
  * {@link AbstractSingleProperty} extension with limited checking is property equal with <code>null</code>.

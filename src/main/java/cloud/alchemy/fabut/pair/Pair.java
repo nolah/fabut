@@ -1,4 +1,4 @@
-package eu.execom.fabut.pair;
+package cloud.alchemy.fabut.pair;
 
 /**
  * The Class Pair.
