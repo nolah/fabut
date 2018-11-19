@@ -13,7 +13,7 @@ import cloud.alchemy.fabut.property.PropertyPath;
 public class NoGetMethodsType extends Type {
 
     /** The Constant PROPERTY. */
-    public static final PropertyPath<String> PROPERTY = new PropertyPath<String>("property");
+    public static final PropertyPath<String> PROPERTY = new PropertyPath<>("property");
 
     /** The property. */
     private final String property;

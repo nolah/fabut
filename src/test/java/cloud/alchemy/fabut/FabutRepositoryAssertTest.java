@@ -28,6 +28,7 @@ import cloud.alchemy.fabut.model.UnknownEntityType;
  * @author Nikola Olah
  * @author Bojan Babic
  * @author Nikola Trkulja
+ * @author Andrej Miletic
  */
 public class FabutRepositoryAssertTest extends AbstractFabutRepositoryAssertTest {
 
@@ -270,7 +271,7 @@ public class FabutRepositoryAssertTest extends AbstractFabutRepositoryAssertTest
     @Test
     public void testMarkAssertedNotTypeSupportedTrue() {
         // setup
-        final List<Object> list = new ArrayList<Object>();
+        final List<Object> list = new ArrayList<>();
         setEntityTierTwoTypes(list);
 
         // method
@@ -584,7 +585,7 @@ public class FabutRepositoryAssertTest extends AbstractFabutRepositoryAssertTest
 
         // method
         final boolean assertResult = getFabutRepositoryAssert().assertPair("", new FabutReportBuilder(), entityPair,
-                new LinkedList<ISingleProperty>(), new NodesList());
+                new LinkedList<>(), new NodesList());
 
         // assert
         assertFalse(assertResult);

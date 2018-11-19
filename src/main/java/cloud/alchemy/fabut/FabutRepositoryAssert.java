@@ -26,6 +26,7 @@ import org.junit.Assert;
  * @author Nikola Olah
  * @author Bojan Babic
  * @author Nikola Trkulja
+ * @author Andrej Miletic
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 class FabutRepositoryAssert extends FabutObjectAssert {
@@ -42,7 +43,7 @@ class FabutRepositoryAssert extends FabutObjectAssert {
     public FabutRepositoryAssert(final IFabutRepositoryTest repositoryFabutTest) {
         super(repositoryFabutTest);
         this.repositoryFabutTest = repositoryFabutTest;
-        dbSnapshot = new HashMap<Class<?>, Map<Object, CopyAssert>>();
+        dbSnapshot = new HashMap<>();
         assertType = AssertType.REPOSITORY_ASSERT;
         getTypes().put(AssertableType.ENTITY_TYPE, repositoryFabutTest.getEntityTypes());
         isRepositoryValid = false;
@@ -193,7 +194,7 @@ class FabutRepositoryAssert extends FabutObjectAssert {
         }
         Object copy = null;
         try {
-            copy = ReflectionUtil.createCopy(entity, getTypes());
+            copy = ReflectionUtil.createCopy(entity, getTypes(), getIgnoredFields());
         } catch (final CopyException e) {
             report.noCopy(entity);
             return ASSERT_FAIL;
@@ -255,7 +256,7 @@ class FabutRepositoryAssert extends FabutObjectAssert {
 
             for (final Object entity : findAll) {
                 try {
-                    final Object copy = ReflectionUtil.createCopy(entity, getTypes());
+                    final Object copy = ReflectionUtil.createCopy(entity, getTypes(), getIgnoredFields());
                     entry.getValue().put(ReflectionUtil.getIdValue(entity), new CopyAssert(copy));
                 } catch (final CopyException e) {
                     report.noCopy(entity);
@@ -377,13 +378,13 @@ class FabutRepositoryAssert extends FabutObjectAssert {
         for (final Object id : beforeIdsCopy) {
             if (!beforeEntities.get(id).isAsserted()) {
                 ok &= assertObjects(report, beforeEntities.get(id).getEntity(), afterEntities.get(id),
-                        new LinkedList<ISingleProperty>());
+                        new LinkedList<>());
             }
         }
         return ok;
     }
 
-    Map getAfterEntities(final Class<?> clazz) {
+    private Map getAfterEntities(final Class<?> clazz) {
         final Map afterEntities = new TreeMap();
         final List entities = findAll(clazz);
         for (final Object entity : entities) {
@@ -395,17 +396,17 @@ class FabutRepositoryAssert extends FabutObjectAssert {
         return afterEntities;
     }
 
-    Map<Class<?>, Map<Object, CopyAssert>> getDbSnapshot() {
+    private Map<Class<?>, Map<Object, CopyAssert>> getDbSnapshot() {
         return dbSnapshot;
     }
 
     /**
      * Initialize database snapshot.
      */
-    void initDbSnapshot() {
+    private void initDbSnapshot() {
         dbSnapshot.clear();
         for (final Class<?> entityType : getEntityTypes()) {
-            getDbSnapshot().put(entityType, new HashMap<Object, CopyAssert>());
+            getDbSnapshot().put(entityType, new HashMap<>());
         }
     }
 

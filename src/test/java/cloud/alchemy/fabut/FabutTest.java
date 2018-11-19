@@ -646,17 +646,17 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
 
         // assert
         Fabut.assertObject(student,
-                Fabut.value(new PropertyPath<String>("name"), "Nikola"),
-                Fabut.value(new PropertyPath<String>("lastName"), "Olah"),
-                Fabut.value(new PropertyPath<String>("address.city"), "Temerin"),
-                Fabut.value(new PropertyPath<String>("address.street"), "Novosadska"),
-                Fabut.value(new PropertyPath<String>("address.streetNumber"), "627"),
-                Fabut.value(new PropertyPath<String>("faculty.name"), "PMF"),
-                Fabut.value(new PropertyPath<String>("faculty.teacher.name"), "Djura"),
-                Fabut.value(new PropertyPath<String>("faculty.teacher.address.city"), "Kamenica"),
-                Fabut.value(new PropertyPath<String>("faculty.teacher.address.street"), "Ljubicica"),
+                Fabut.value(new PropertyPath<>("name"), "Nikola"),
+                Fabut.value(new PropertyPath<>("lastName"), "Olah"),
+                Fabut.value(new PropertyPath<>("address.city"), "Temerin"),
+                Fabut.value(new PropertyPath<>("address.street"), "Novosadska"),
+                Fabut.value(new PropertyPath<>("address.streetNumber"), "627"),
+                Fabut.value(new PropertyPath<>("faculty.name"), "PMF"),
+                Fabut.value(new PropertyPath<>("faculty.teacher.name"), "Djura"),
+                Fabut.value(new PropertyPath<>("faculty.teacher.address.city"), "Kamenica"),
+                Fabut.value(new PropertyPath<>("faculty.teacher.address.street"), "Ljubicica"),
                 Fabut.value(new PropertyPath<Student>("faculty.teacher.student"), student),
-                Fabut.value(new PropertyPath<String>("faculty.teacher.address.streetNumber"), "10"));
+                Fabut.value(new PropertyPath<>("faculty.teacher.address.streetNumber"), "10"));
         Fabut.afterTest();
     }
 
@@ -664,11 +664,11 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     public void testAssertObjectMaps() {
         // setup
         Fabut.beforeTest(this);
-        final Map<String, TierOneType> expected = new HashMap<String, TierOneType>();
+        final Map<String, TierOneType> expected = new HashMap<>();
         expected.put("first", new TierOneType(TEST));
         expected.put("second", new TierOneType(TEST));
 
-        final Map<String, TierOneType> actual = new HashMap<String, TierOneType>();
+        final Map<String, TierOneType> actual = new HashMap<>();
         actual.put("first", new TierOneType(TEST));
         actual.put("second", new TierOneType(TEST));
         Fabut.takeSnapshot();
@@ -683,11 +683,11 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     public void testAssertObjectMapsFail() {
         // setup
         Fabut.beforeTest(this);
-        final Map<String, TierOneType> expected = new HashMap<String, TierOneType>();
+        final Map<String, TierOneType> expected = new HashMap<>();
         expected.put("first", new TierOneType(TEST));
         expected.put("second", new TierOneType(TEST));
 
-        final Map<String, TierOneType> actual = new HashMap<String, TierOneType>();
+        final Map<String, TierOneType> actual = new HashMap<>();
         actual.put("first", new TierOneType(TEST + TEST));
         actual.put("second", new TierOneType(TEST));
         Fabut.takeSnapshot();
@@ -704,13 +704,13 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
         Fabut.beforeTest(this);
         final TierTwoTypeWithMap expected = new TierTwoTypeWithMap();
         expected.setProperty(TEST);
-        expected.setMap(new HashMap<Integer, TierOneType>());
+        expected.setMap(new HashMap<>());
         expected.getMap().put(1, new TierOneType("a"));
         expected.getMap().put(2, new TierOneType("b"));
 
         final TierTwoTypeWithMap actual = new TierTwoTypeWithMap();
         actual.setProperty(TEST);
-        actual.setMap(new HashMap<Integer, TierOneType>());
+        actual.setMap(new HashMap<>());
         actual.getMap().put(1, new TierOneType("c"));
         actual.getMap().put(2, new TierOneType("d"));
 
@@ -726,9 +726,9 @@ public class FabutTest extends AbstractFabutRepositoryAssertTest {
     public void testAssertObjectWithInnerList() {
         // setup
         Fabut.beforeTest(this);
-        final TierTwoTypeWithListProperty expected = new TierTwoTypeWithListProperty(new LinkedList<String>());
+        final TierTwoTypeWithListProperty expected = new TierTwoTypeWithListProperty(new LinkedList<>());
         expected.getProperty().add(TEST);
-        final TierTwoTypeWithListProperty actual = new TierTwoTypeWithListProperty(new LinkedList<String>());
+        final TierTwoTypeWithListProperty actual = new TierTwoTypeWithListProperty(new LinkedList<>());
         actual.getProperty().add(TEST + TEST);
 
         Fabut.takeSnapshot();

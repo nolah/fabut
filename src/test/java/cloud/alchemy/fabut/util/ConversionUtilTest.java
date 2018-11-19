@@ -18,7 +18,7 @@ import org.junit.Test;
  */
 public class ConversionUtilTest extends Assert {
 
-    private static final PropertyPath<String> TEST =  new PropertyPath<String>("test");
+    private static final PropertyPath<String> TEST =  new PropertyPath<>("test");
 
     /**
      * Test for createListFromVaragrs of {@link ConversionUtil} when there are two properties specified in particular.

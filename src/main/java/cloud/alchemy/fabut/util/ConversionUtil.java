@@ -1,5 +1,6 @@
 package cloud.alchemy.fabut.util;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -37,11 +38,11 @@ public final class ConversionUtil {
      * @param <X>
      *            generic type
      */
+    @SafeVarargs
     public static <X> List<X> createListFromArray(final X... excludes) {
-        final List<X> list = new LinkedList<X>();
-        for (final X object : excludes) {
-            list.add(object);
-        }
+        final List<X> list = new LinkedList<>();
+        list.addAll(Arrays.asList(excludes));
+
         return list;
     }
 

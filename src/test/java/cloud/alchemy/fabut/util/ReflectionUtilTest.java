@@ -31,6 +31,7 @@ import cloud.alchemy.fabut.model.UnknownType;
  * @author Nikola Olah
  * @author Bojan Babic
  * @author Nikola Trkulja
+ * @author Andrej Miletic
  */
 @SuppressWarnings("unchecked")
 public class ReflectionUtilTest extends Assert {
@@ -43,6 +44,7 @@ public class ReflectionUtilTest extends Assert {
     private static final String IS_NOT_BOOLEAN_PROPERTY = "isNotBooleanProperty";
 
     Map<AssertableType, List<Class<?>>> types;
+    Map<Class<?>, List<String>> ignoredProperties;
 
     /**
      * Test for isGetMethod of {@link ReflectionUtil} when method does not starts with "get" prefix and there is
@@ -53,8 +55,8 @@ public class ReflectionUtilTest extends Assert {
      */
     @Before
     public void setup() {
-        types = new EnumMap<AssertableType, List<Class<?>>>(AssertableType.class);
-        final List<Class<?>> complexTypes = new LinkedList<Class<?>>();
+        types = new EnumMap<>(AssertableType.class);
+        final List<Class<?>> complexTypes = new LinkedList<>();
         complexTypes.add(TierOneType.class);
         complexTypes.add(TierTwoType.class);
         complexTypes.add(A.class);
@@ -62,10 +64,13 @@ public class ReflectionUtilTest extends Assert {
         complexTypes.add(C.class);
         types.put(AssertableType.COMPLEX_TYPE, complexTypes);
 
-        final List<Class<?>> entityTypes = new LinkedList<Class<?>>();
+        final List<Class<?>> entityTypes = new LinkedList<>();
         complexTypes.add(EntityTierOneType.class);
         complexTypes.add(EntityTierTwoType.class);
         types.put(AssertableType.ENTITY_TYPE, entityTypes);
+
+        ignoredProperties = new HashMap<>();
+
     }
 
     @Test
@@ -73,7 +78,7 @@ public class ReflectionUtilTest extends Assert {
         // setup
         final Method method = NoGetMethodsType.class.getMethod("property");
         // method
-        final boolean isGetMethod = ReflectionUtil.isGetMethod(new NoGetMethodsType(TEST).getClass(), method);
+        final boolean isGetMethod = ReflectionUtil.isGetMethod(new NoGetMethodsType(TEST).getClass(), method, ignoredProperties);
         // assert
         assertFalse(isGetMethod);
     }
@@ -89,7 +94,7 @@ public class ReflectionUtilTest extends Assert {
         // setup
         final Method method = NoGetMethodsType.class.getMethod("getString");
         // method
-        final boolean isGetMethod = ReflectionUtil.isGetMethod(new NoGetMethodsType(TEST).getClass(), method);
+        final boolean isGetMethod = ReflectionUtil.isGetMethod(new NoGetMethodsType(TEST).getClass(), method, ignoredProperties);
         // assert
         assertFalse(isGetMethod);
     }
@@ -105,7 +110,7 @@ public class ReflectionUtilTest extends Assert {
         // setup
         final Method method = TierOneType.class.getMethod(GET_PROPERTY);
         // method
-        final boolean isGetMetod = ReflectionUtil.isGetMethod(new TierOneType(TEST).getClass(), method);
+        final boolean isGetMetod = ReflectionUtil.isGetMethod(new TierOneType(TEST).getClass(), method, ignoredProperties);
         // assert
         assertTrue(isGetMetod);
     }
@@ -122,7 +127,7 @@ public class ReflectionUtilTest extends Assert {
         // setup
         final Method method = NoGetMethodsType.class.getMethod(PROPERTY);
         // method
-        final boolean isGetMethod = ReflectionUtil.isGetMethod(new NoGetMethodsType(TEST).getClass(), method);
+        final boolean isGetMethod = ReflectionUtil.isGetMethod(new NoGetMethodsType(TEST).getClass(), method, ignoredProperties);
         // assert
         assertFalse(isGetMethod);
     }
@@ -140,7 +145,7 @@ public class ReflectionUtilTest extends Assert {
         final Method method = NoGetMethodsType.class.getMethod(IS_NOT_BOOLEAN_PROPERTY);
 
         // method
-        final boolean isGetMethod = ReflectionUtil.isGetMethod(new NoGetMethodsType(TEST).getClass(), method);
+        final boolean isGetMethod = ReflectionUtil.isGetMethod(new NoGetMethodsType(TEST).getClass(), method, ignoredProperties);
 
         // assert
         assertFalse(isGetMethod);
@@ -159,7 +164,7 @@ public class ReflectionUtilTest extends Assert {
         final Method method = NoGetMethodsType.class.getMethod(IS_FIELD);
 
         // method
-        final boolean assertValue = ReflectionUtil.isGetMethod(new NoGetMethodsType(TEST).getClass(), method);
+        final boolean assertValue = ReflectionUtil.isGetMethod(new NoGetMethodsType(TEST).getClass(), method, ignoredProperties);
 
         // assert
         assertFalse(assertValue);
@@ -177,7 +182,7 @@ public class ReflectionUtilTest extends Assert {
         final Method method = BooleanFieldType.class.getMethod(IS_PROPERTY);
 
         // method
-        final boolean isGetMethod = ReflectionUtil.isGetMethod(new BooleanFieldType(true).getClass(), method);
+        final boolean isGetMethod = ReflectionUtil.isGetMethod(new BooleanFieldType(true).getClass(), method, ignoredProperties);
 
         // assert
         assertTrue(isGetMethod);
@@ -498,14 +503,14 @@ public class ReflectionUtilTest extends Assert {
     @Test
     public void testCopyList() throws CopyException {
         // setup
-        final List<String> list = new LinkedList<String>();
+        final List<String> list = new LinkedList<>();
         final Map<AssertableType, List<Class<?>>> types = new EnumMap<AssertableType, List<Class<?>>>(
                 AssertableType.class);
         types.put(AssertableType.COMPLEX_TYPE, new LinkedList<Class<?>>());
         list.add(TEST);
 
         // method
-        final List<String> assertList = ReflectionUtil.copyList(list, types);
+        final List<String> assertList = ReflectionUtil.copyList(list, types, ignoredProperties);
 
         assertNotNull(assertList);
         assertEquals(1, assertList.size());
@@ -519,7 +524,7 @@ public class ReflectionUtilTest extends Assert {
     public void testCreateCopyNull() throws CopyException {
         // method
         final Object object = ReflectionUtil.createCopy(null, new EnumMap<AssertableType, List<Class<?>>>(
-                AssertableType.class));
+                AssertableType.class), ignoredProperties);
 
         // assert
         assertNull(object);
@@ -531,14 +536,14 @@ public class ReflectionUtilTest extends Assert {
     @Test
     public void testCreateCopyList() throws CopyException {
         // setup
-        final List<String> list = new LinkedList<String>();
+        final List<String> list = new LinkedList<>();
         final Map<AssertableType, List<Class<?>>> types = new EnumMap<AssertableType, List<Class<?>>>(
                 AssertableType.class);
         types.put(AssertableType.COMPLEX_TYPE, new LinkedList<Class<?>>());
         list.add(TEST);
 
         // method
-        final List<String> assertList = (List<String>) ReflectionUtil.createCopy(list, types);
+        final List<String> assertList = (List<String>) ReflectionUtil.createCopy(list, types, ignoredProperties);
 
         assertNotNull(assertList);
         assertEquals(1, assertList.size());
@@ -552,7 +557,7 @@ public class ReflectionUtilTest extends Assert {
     @Test
     public void testIvokeSetMethodSuccess() {
         // setup
-        final Method method = ReflectionUtil.getGetMethods(new TierOneType(), types).get(0);
+        final Method method = ReflectionUtil.getGetMethods(new TierOneType(), types, ignoredProperties).get(0);
         final Class<?> classObject = TierOneType.class;
         final String propertyName = PROPERTY;
         final TierOneType copy = new TierOneType();
@@ -572,7 +577,7 @@ public class ReflectionUtilTest extends Assert {
     @Test
     public void testIvokeSetMethodNull() {
         // setup
-        final Method method = ReflectionUtil.getGetMethods(new TierTwoType(new TierOneType()), types).get(0);
+        final Method method = ReflectionUtil.getGetMethods(new TierTwoType(new TierOneType()), types, ignoredProperties).get(0);
         final Class<?> classObject = TierTwoType.class;
         final String propertyName = PROPERTY;
         final TierTwoType copy = new TierTwoType(new TierOneType());
@@ -591,7 +596,7 @@ public class ReflectionUtilTest extends Assert {
     @Test
     public void testCopyPropertyNull() throws CopyException {
         // method
-        final Object copy = ReflectionUtil.copyProperty(null, null, types);
+        final Object copy = ReflectionUtil.copyProperty(null, null, types, ignoredProperties);
 
         // assert
         assertNull(copy);
@@ -605,7 +610,7 @@ public class ReflectionUtilTest extends Assert {
     public void testCopyPropertyComplexType() throws CopyException {
         // method
         final EntityTierTwoType copy = (EntityTierTwoType) ReflectionUtil.copyProperty(new EntityTierTwoType(TEST, 1,
-                new EntityTierOneType(PROPERTY, 2)), new NodesList(), types);
+                new EntityTierOneType(PROPERTY, 2)), new NodesList(), types, ignoredProperties);
 
         // assert
         assertNotNull(copy);
@@ -626,7 +631,7 @@ public class ReflectionUtilTest extends Assert {
         list.add(TEST);
 
         // method
-        final List<String> copy = (List<String>) ReflectionUtil.copyProperty(list, null, types);
+        final List<String> copy = (List<String>) ReflectionUtil.copyProperty(list, null, types, ignoredProperties);
 
         // assert
         assertNotNull(copy);
@@ -644,7 +649,7 @@ public class ReflectionUtilTest extends Assert {
         final UnknownType unknownType = new UnknownType();
 
         // method
-        final UnknownType copy = (UnknownType) ReflectionUtil.copyProperty(unknownType, null, types);
+        final UnknownType copy = (UnknownType) ReflectionUtil.copyProperty(unknownType, null, types, ignoredProperties);
 
         // assert
         assertEquals(unknownType, copy);
@@ -657,7 +662,7 @@ public class ReflectionUtilTest extends Assert {
     @Test
     public void testGetPropertyForCopyingCanInvoke() {
         // setup
-        final Method method = ReflectionUtil.getGetMethods(new EntityTierOneType(), types).get(1);
+        final Method method = ReflectionUtil.getGetMethods(new EntityTierOneType(), types, ignoredProperties).get(1);
 
         // method
         final String property = (String) ReflectionUtil.getPropertyForCopying(new EntityTierOneType(TEST, 1), method);
@@ -673,7 +678,7 @@ public class ReflectionUtilTest extends Assert {
     @Test(expected = AssertionFailedError.class)
     public void testGetPropertyForCopyingCantInvoke() {
         // setup
-        final Method method = ReflectionUtil.getGetMethods(new EntityTierOneType(), types).get(1);
+        final Method method = ReflectionUtil.getGetMethods(new EntityTierOneType(), types, ignoredProperties).get(1);
 
         // method
         final String property = (String) ReflectionUtil.getPropertyForCopying(null, method);
@@ -693,7 +698,7 @@ public class ReflectionUtilTest extends Assert {
         a.setB(new B(new C(a)));
 
         // method
-        final A aCopy = (A) ReflectionUtil.createCopy(a, types);
+        final A aCopy = (A) ReflectionUtil.createCopy(a, types, ignoredProperties);
 
         // assert
         assertEquals(aCopy, aCopy.getB().getC().getA());
@@ -710,12 +715,12 @@ public class ReflectionUtilTest extends Assert {
     @Test
     public void testCopyMap() throws CopyException {
         // setup
-        final Map<String, TierOneType> map = new HashMap<String, TierOneType>();
+        final Map<String, TierOneType> map = new HashMap<>();
         map.put("first", new TierOneType(TEST));
         map.put("second", new TierOneType(TEST + TEST));
 
         // method
-        final Map<String, TierOneType> result = (Map<String, TierOneType>) ReflectionUtil.copyMap(map, types);
+        final Map<String, TierOneType> result = (Map<String, TierOneType>) ReflectionUtil.copyMap(map, types, ignoredProperties);
 
         // assert
         assertEquals(2, result.size());

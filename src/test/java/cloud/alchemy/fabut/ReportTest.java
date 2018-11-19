@@ -10,7 +10,6 @@ import cloud.alchemy.fabut.property.PropertyPath;
 import junit.framework.AssertionFailedError;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -18,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@Ignore
+
 public class ReportTest extends AbstractFabutRepositoryAssertTest {
     private static final String TEST = "test";
 
@@ -36,7 +35,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
      * Test for {@link Fabut#beforeTest(Object)} if it throws {@link IllegalStateException} if specified test instance
      * doesn't implement {@link IFabutTest} or {@link IFabutRepositoryTest}.
      */
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testBeforeTest() {
         // method
         try {
@@ -62,7 +61,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     /**
      * Test for {@link Fabut#afterTest()} when snapshot doesn't match after state.
      */
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testAfterTestFail() {
         // setup
         Fabut.beforeTest(this);
@@ -82,7 +81,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     /**
      * Test for {@link Fabut#takeSnapshot(Object...)} when there are entites in repository that cannot be copied.
      */
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testTakeSnapshotFail() {
         // setup
         Fabut.beforeTest(this);
@@ -164,7 +163,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
      * Test for {@link Fabut#assertObject(Object, IProperty...)} when object is entity and
      * cannot be asserted.
      */
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testAssertObjectWithEntityTypeFail() {
         // setup
         Fabut.beforeTest(this);
@@ -208,7 +207,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
      * Test for {@link Fabut#assertObjects(Object, Object, IProperty...)} when specified
      * objects are complex types and assert fails.
      */
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testAssertObjectsComplexFail() {
         // setup
         Fabut.beforeTest(this);
@@ -268,7 +267,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     /**
      * Test for {@link Fabut#assertList(List, Object...)} when specified objects are lists and they cannot be asserted.
      */
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testAssertObjectsListFail() {
         // setup
         Fabut.beforeTest(this);
@@ -314,7 +313,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
      * Test for {@link Fabut#assertObjects(Object, Object, IProperty...)} when specified
      * objects are entities and cannot be asserted.
      */
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testAssertObjectsEntityFail() {
         // setup
         Fabut.beforeTest(this);
@@ -363,7 +362,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
      * Test for {@link Fabut#assertEntityWithSnapshot(Object, IProperty...)} when entity cannot
      * be asserted with one in snapshot.
      */
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testAssertEntityWithSnapshotFail() {
         // setup
         Fabut.beforeTest(this);
@@ -388,7 +387,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
      * Test for {@link Fabut#assertEntityWithSnapshot(Object, IProperty...)} when specified
      * object is not an entity.
      */
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testAssertEntityWithSnapshotNotEntity() {
         // setup
         Fabut.beforeTest(this);
@@ -402,7 +401,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
         }
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test(expected = AssertionFailedError.class)
     public void testAssertEntityWithSnapshotNullEntity() {
         // setup
         Fabut.beforeTest(this);
@@ -447,7 +446,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     /**
      * Test for {@link Fabut#markAsserted(Object)} when entity cannot be marked as asserted.
      */
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testMarkAssertedFail() {
         // setup
         Fabut.beforeTest(this);
@@ -468,7 +467,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     /**
      * Test for {@link Fabut#markAsserted(Object)} when object is not entity.
      */
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testMarkAssertedNotEntity() {
         // setup
         Fabut.beforeTest(this);
@@ -510,7 +509,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     /**
      * Test for {@link Fabut#assertEntityAsDeleted(Object)} when specified entity is not deleted in repository.
      */
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void assertEntityAsDeletedFail() {
         // setup
         Fabut.beforeTest(this);
@@ -531,7 +530,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     /**
      * Test for {@link Fabut#assertEntityAsDeleted(Object)} when specified object is not entity.
      */
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void assertEntityAsDeletedNotEntity() {
         // setup
         Fabut.beforeTest(this);
@@ -572,7 +571,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     /**
      * Test for {@link Fabut#ignoreEntity(Object)} when entity cannot be ignored.
      */
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testIgnoreEntityFail() {
         // setup
         Fabut.beforeTest(this);
@@ -593,7 +592,7 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     /**
      * Test for {@link Fabut#ignoreEntity(Object)} when object is not entity.
      */
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testIgnoreEntityNotEntity() {
         // setup
         Fabut.beforeTest(this);
@@ -643,17 +642,17 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
         // assert
         try {
             Fabut.assertObject(student,
-                    Fabut.value(new PropertyPath<String>("name"), "Nikola"),
-                    Fabut.value(new PropertyPath<String>("lastName"), "Olah"),
-                    Fabut.value(new PropertyPath<String>("address.city"), "Temerin1"),
-                    Fabut.value(new PropertyPath<String>("address.street"), "Novosadska"),
-                    Fabut.value(new PropertyPath<String>("address.streetNumber"), "627"),
-                    Fabut.value(new PropertyPath<String>("faculty.name"), "PMF"),
-                    Fabut.value(new PropertyPath<String>("faculty.teacher.name"), "Djura"),
-                    Fabut.value(new PropertyPath<String>("faculty.teacher.address.city"), "Kamenica"),
-                    Fabut.value(new PropertyPath<String>("faculty.teacher.address.street"), "Ljubicica"),
-                    Fabut.value(new PropertyPath<Student>("faculty.teacher.student"), student),
-                    Fabut.value(new PropertyPath<String>("faculty.teacher.address.streetNumber"), "10"));
+                    Fabut.value(new PropertyPath<>("name"), "Nikola"),
+                    Fabut.value(new PropertyPath<>("lastName"), "Olah"),
+                    Fabut.value(new PropertyPath<>("address.city"), "Temerin1"),
+                    Fabut.value(new PropertyPath<>("address.street"), "Novosadska"),
+                    Fabut.value(new PropertyPath<>("address.streetNumber"), "627"),
+                    Fabut.value(new PropertyPath<>("faculty.name"), "PMF"),
+                    Fabut.value(new PropertyPath<>("faculty.teacher.name"), "Djura"),
+                    Fabut.value(new PropertyPath<>("faculty.teacher.address.city"), "Kamenica"),
+                    Fabut.value(new PropertyPath<>("faculty.teacher.address.street"), "Ljubicica"),
+                    Fabut.value(new PropertyPath<>("faculty.teacher.student"), student),
+                    Fabut.value(new PropertyPath<>("faculty.teacher.address.streetNumber"), "10"));
         } catch (final Throwable e) {
             System.out.println(e.getMessage());
         }
@@ -664,11 +663,11 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
     public void testAssertObjectMaps() {
         // setup
         Fabut.beforeTest(this);
-        final Map<String, TierOneType> expected = new HashMap<String, TierOneType>();
+        final Map<String, TierOneType> expected = new HashMap<>();
         expected.put("first", new TierOneType(TEST));
         expected.put("second", new TierOneType(TEST));
 
-        final Map<String, TierOneType> actual = new HashMap<String, TierOneType>();
+        final Map<String, TierOneType> actual = new HashMap<>();
         actual.put("first", new TierOneType(TEST));
         actual.put("second", new TierOneType(TEST + 1));
         Fabut.takeSnapshot();
@@ -683,15 +682,15 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
         Fabut.afterTest();
     }
 
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testAssertObjectMapsFail() {
         // setup
         Fabut.beforeTest(this);
-        final Map<String, TierOneType> expected = new HashMap<String, TierOneType>();
+        final Map<String, TierOneType> expected = new HashMap<>();
         expected.put("first", new TierOneType(TEST));
         expected.put("second", new TierOneType(TEST));
 
-        final Map<String, TierOneType> actual = new HashMap<String, TierOneType>();
+        final Map<String, TierOneType> actual = new HashMap<>();
         actual.put("first", new TierOneType(TEST + TEST));
         actual.put("second", new TierOneType(TEST));
         Fabut.takeSnapshot();
@@ -706,19 +705,19 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
         Fabut.afterTest();
     }
 
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testAssertObjectWithInnerMapFail() {
         // setup
         Fabut.beforeTest(this);
         final TierTwoTypeWithMap expected = new TierTwoTypeWithMap();
         expected.setProperty(TEST);
-        expected.setMap(new HashMap<Integer, TierOneType>());
+        expected.setMap(new HashMap<>());
         expected.getMap().put(1, new TierOneType("a"));
         expected.getMap().put(2, new TierOneType("b"));
 
         final TierTwoTypeWithMap actual = new TierTwoTypeWithMap();
         actual.setProperty(TEST);
-        actual.setMap(new HashMap<Integer, TierOneType>());
+        actual.setMap(new HashMap<>());
         actual.getMap().put(1, new TierOneType("c"));
         actual.getMap().put(2, new TierOneType("d"));
 
@@ -734,13 +733,13 @@ public class ReportTest extends AbstractFabutRepositoryAssertTest {
         Fabut.afterTest();
     }
 
-    @Test(expected = AssertionFailedError.class)
+    @Test
     public void testAssertObjectWithInnerList() {
         // setup
         Fabut.beforeTest(this);
-        final TierTwoTypeWithListProperty expected = new TierTwoTypeWithListProperty(new LinkedList<String>());
+        final TierTwoTypeWithListProperty expected = new TierTwoTypeWithListProperty(new LinkedList<>());
         expected.getProperty().add(TEST);
-        final TierTwoTypeWithListProperty actual = new TierTwoTypeWithListProperty(new LinkedList<String>());
+        final TierTwoTypeWithListProperty actual = new TierTwoTypeWithListProperty(new LinkedList<>());
         actual.getProperty().add(TEST + TEST);
 
         Fabut.takeSnapshot();

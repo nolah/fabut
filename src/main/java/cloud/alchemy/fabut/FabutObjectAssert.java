@@ -17,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import static java.util.Optional.empty;
+
 /**
  * Tool for smart asserting two objecting, or asserting object with list of custom properties. Object asserting is done
  * by asserting all the fields inside the given object, if the field is primitive the tool will do user specified assert
@@ -42,6 +44,11 @@ class FabutObjectAssert extends Assert {
     private Map<AssertableType, List<Class<?>>> types;
 
     /**
+     *  Ignored properties
+     */
+    private Map<Class<?>, List<String>> ignoredFields;
+
+    /**
      * The parameter snapshot.
      */
     private final List<SnapshotPair> parameterSnapshot;
@@ -59,11 +66,12 @@ class FabutObjectAssert extends Assert {
     public FabutObjectAssert(final IFabutTest fabutTest) {
         super();
         this.fabutTest = fabutTest;
-        types = new EnumMap<AssertableType, List<Class<?>>>(AssertableType.class);
-        parameterSnapshot = new ArrayList<SnapshotPair>();
+        ignoredFields = fabutTest.getIgnoredFields();
+        types = new EnumMap<>(AssertableType.class);
+        parameterSnapshot = new ArrayList<>();
         types.put(AssertableType.COMPLEX_TYPE, fabutTest.getComplexTypes());
         types.put(AssertableType.IGNORED_TYPE, fabutTest.getIgnoredTypes());
-        types.put(AssertableType.ENTITY_TYPE, new LinkedList<Class<?>>());
+        types.put(AssertableType.ENTITY_TYPE, new LinkedList<>());
     }
 
     /**
@@ -83,11 +91,12 @@ class FabutObjectAssert extends Assert {
             return ASSERT_FAIL;
         }
 
-        final List<Method> methods = ReflectionUtil.getGetMethods(actual, types);
+        final List<Method> methods = ReflectionUtil.getGetMethods(actual, types, fabutTest.getIgnoredFields());
         boolean result = ASSERTED;
         for (final Method method : methods) {
 
             final String fieldName = ReflectionUtil.getFieldName(method);
+
             final ISingleProperty property = getPropertyFromList(fieldName, expectedProperties);
             try {
                 if (property != null) {
@@ -105,6 +114,12 @@ class FabutObjectAssert extends Assert {
                 report.uncallableMethod(method, actual);
                 result = ASSERT_FAIL;
             }
+        }
+        if (!expectedProperties.isEmpty()) {
+            for (ISingleProperty singleProperty : expectedProperties) {
+                report.excessExpectedProperty(singleProperty.getPath());
+            }
+            result = ASSERT_FAIL;
         }
         if (result) {
             afterAssertObject(actual, false);
@@ -166,7 +181,7 @@ class FabutObjectAssert extends Assert {
         boolean ok = ASSERTED;
         for (final Object object : parameters) {
             try {
-                final SnapshotPair snapshotPair = new SnapshotPair(object, ReflectionUtil.createCopy(object, types));
+                final SnapshotPair snapshotPair = new SnapshotPair(object, ReflectionUtil.createCopy(object, types, ignoredFields));
                 parameterSnapshot.add(snapshotPair);
             } catch (final CopyException e) {
                 report.noCopy(object);
@@ -229,6 +244,8 @@ class FabutObjectAssert extends Assert {
             case MAP_TYPE:
                 return assertMap(propertyName, report, (Map) pair.getExpected(), (Map) pair.getActual(), properties,
                         nodesList, true);
+            case OPTIONAL_TYPE:
+                return assertOptional(report, (Optional) pair.getExpected(), (Optional) pair.getActual(), properties);
             default:
                 throw new IllegalStateException("Unknown assert type: " + pair.getObjectType());
         }
@@ -265,7 +282,7 @@ class FabutObjectAssert extends Assert {
         report.increaseDepth(propertyName);
 
         boolean t = ASSERTED;
-        final List<Method> getMethods = ReflectionUtil.getGetMethods(pair.getExpected(), types);
+        final List<Method> getMethods = ReflectionUtil.getGetMethods(pair.getExpected(), types, ignoredFields);
 
         for (final Method expectedMethod : getMethods) {
             try {
@@ -357,6 +374,24 @@ class FabutObjectAssert extends Assert {
             return ok;
         }
 
+        // expected any not empty value
+        if (expected instanceof NotEmptyProperty) {
+            final boolean ok = actual instanceof Optional && ((Optional)actual).isPresent() ? ASSERTED : ASSERT_FAIL;
+            if (!ok) {
+                report.notEmptyProperty(propertyName);
+            }
+            return ok;
+        }
+
+        // expected empty value
+        if (expected instanceof EmptyProperty) {
+            final boolean ok = actual instanceof Optional && !((Optional)actual).isPresent() ? ASSERTED : ASSERT_FAIL;
+            if (!ok){
+                report.emptyProperty(propertyName);
+            }
+            return ok;
+        }
+
         // any value
         if (expected instanceof IgnoredProperty) {
             report.reportIgnoreProperty(propertyName);
@@ -439,6 +474,19 @@ class FabutObjectAssert extends Assert {
         ok &= assertExcessActual(propertyName, report, actual, expectedKeysCopy, actualKeys);
         report.decreaseDepth();
         return ok;
+    }
+
+    boolean assertOptional(final FabutReportBuilder report, final Optional expected, final Optional actual,
+                           final List<ISingleProperty> properties) {
+
+        if (!expected.isPresent() && !actual.isPresent()) {
+            return ASSERTED;
+        }
+        if (expected.isPresent() ^ actual.isPresent()) {
+            return ASSERT_FAIL;
+        }
+
+        return assertObjects(report, expected.get(), actual.get(), properties);
     }
 
     /**
@@ -585,7 +633,7 @@ class FabutObjectAssert extends Assert {
      * @return the list
      */
     List<ISingleProperty> extractProperties(final IProperty... properties) {
-        final ArrayList<ISingleProperty> list = new ArrayList<ISingleProperty>();
+        final ArrayList<ISingleProperty> list = new ArrayList<>();
 
         for (final IProperty property : properties) {
             if (property instanceof ISingleProperty) {
@@ -668,6 +716,10 @@ class FabutObjectAssert extends Assert {
      */
     public Map<AssertableType, List<Class<?>>> getTypes() {
         return types;
+    }
+
+    public Map<Class<?>, List<String>> getIgnoredFields() {
+        return ignoredFields;
     }
 
     /**

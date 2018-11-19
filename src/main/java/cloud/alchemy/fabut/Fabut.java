@@ -319,7 +319,7 @@ public class Fabut {
      * @return created objects.
      */
     public static MultiProperties ignored(final PropertyPath<?>... paths) {
-        final List<ISingleProperty> properties = new ArrayList<ISingleProperty>();
+        final List<ISingleProperty> properties = new ArrayList<>();
 
         for (final PropertyPath<?> path : paths) {
             properties.add(ignored(path));
@@ -347,7 +347,7 @@ public class Fabut {
      * @return created objects.
      */
     public static MultiProperties notNull(final PropertyPath<?>... paths) {
-        final List<ISingleProperty> properties = new ArrayList<ISingleProperty>();
+        final List<ISingleProperty> properties = new ArrayList<>();
 
         for (final PropertyPath<?> path : paths) {
             properties.add(notNull(path));
@@ -375,10 +375,62 @@ public class Fabut {
      * @return created objects.
      */
     public static MultiProperties isNull(final PropertyPath<?>... paths) {
-        final List<ISingleProperty> properties = new ArrayList<ISingleProperty>();
+        final List<ISingleProperty> properties = new ArrayList<>();
 
         for (final PropertyPath<?> path : paths) {
             properties.add(isNull(path));
+        }
+
+        return new MultiProperties(properties);
+    }
+
+    /**
+     * Create {@link NotEmptyProperty} with provided parameter.
+     *
+     * @param path
+     *            property path.
+     * @return created object.
+     */
+    public static NotEmptyProperty notEmpty(final PropertyPath<?> path) { return new NotEmptyProperty(path.getPath()); }
+
+    /**
+     * Create {@link NotEmptyProperty} with provided parameters.
+     *
+     * @param paths
+     *            property paths.
+     * @return created objects.
+     */
+    public static MultiProperties notEmpty(final PropertyPath<?>... paths) {
+        final List<ISingleProperty> properties = new ArrayList<>();
+
+        for (final PropertyPath<?> path : paths) {
+            properties.add(notEmpty(path));
+        }
+
+        return new MultiProperties(properties);
+    }
+
+    /**
+     * Create {@link EmptyProperty} with provided parameter.
+     *
+     * @param path
+     *            property path.
+     * @return created object.
+     */
+    public static EmptyProperty isEmpty(final PropertyPath<?> path) { return new EmptyProperty(path.getPath()); }
+
+    /**
+     * Create {@link EmptyProperty} with provided parameters.
+     *
+     * @param paths
+     *            property paths.
+     * @return created objects.
+     */
+    public static MultiProperties isEmpty(final PropertyPath<?>... paths) {
+        final List<ISingleProperty> properties = new ArrayList<>();
+
+        for (final PropertyPath<?> path : paths) {
+            properties.add(isEmpty(path));
         }
 
         return new MultiProperties(properties);

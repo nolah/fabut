@@ -2,6 +2,7 @@ package cloud.alchemy.fabut.enums;
 
 import java.util.Map;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Types assertable by FABUT.
@@ -33,6 +34,9 @@ public enum AssertableType {
     LIST_TYPE,
 
     /** Type that implements {@link Map} */
-    MAP_TYPE;
+    MAP_TYPE,
+
+    /** Type that implemens {@link Optional}**/
+    OPTIONAL_TYPE;
 
 }

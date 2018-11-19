@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 
 import cloud.alchemy.fabut.enums.CommentType;
 import cloud.alchemy.fabut.pair.AssertPair;
+import cloud.alchemy.fabut.property.EmptyProperty;
+import cloud.alchemy.fabut.property.NotEmptyProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import cloud.alchemy.fabut.property.NotNullProperty;
@@ -171,6 +173,36 @@ public class FabutReportBuilder {
      */
     public void nullProperty(final String fieldName) {
         final String comment = String.format("%s: expected null property, but field was not null", fieldName);
+        addComment(comment, CommentType.FAIL);
+
+    }
+
+    /**
+     * Reports result of assertion with {@link NotEmptyProperty}.
+     * <p>
+     * Example(): <i>■> id: expected not empty property, but field was empty</i>
+     * </p>
+     *
+     * @param fieldName
+     *            - name of the field
+     */
+    public void notEmptyProperty(final String fieldName) {
+        final String comment = String.format("%s: expected not empty property, but field was empty", fieldName);
+        addComment(comment, CommentType.FAIL);
+    }
+
+    /**
+     * Reports result of of assertion with {@link EmptyProperty}.
+     * <p>
+     * Example: <i>■> endDate: expected empty, but field was empty null</i>
+     * </p>
+     *
+     *
+     * @param fieldName
+     *            - name of the field
+     */
+    public void emptyProperty(final String fieldName) {
+        final String comment = String.format("%s: expected empty property, but field was not empty", fieldName);
         addComment(comment, CommentType.FAIL);
 
     }
@@ -402,6 +434,19 @@ public class FabutReportBuilder {
      */
     public void excessActualMap(final Object key) {
         final String comment = String.format("No match for actual key: %s", key);
+        addComment(comment, CommentType.FAIL);
+    }
+
+    /**
+     * Reports that the path of the property is excess in the assert
+     * <p>
+     * Example: <i>■> Excess property: name </i>
+     * </p>
+     *
+     * @param path Path of the property
+     */
+    public void excessExpectedProperty(final String path) {
+        final String comment = String.format("Excess property: %s", path);
         addComment(comment, CommentType.FAIL);
     }
 

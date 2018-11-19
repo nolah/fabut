@@ -1,7 +1,9 @@
 package cloud.alchemy.fabut;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import cloud.alchemy.fabut.model.test.Address;
 import cloud.alchemy.fabut.model.test.Faculty;
@@ -36,6 +38,7 @@ import cloud.alchemy.fabut.model.TierTwoTypeWithPrimitiveProperty;
  * @author Nikola Olah
  * @author Bojan Babic
  * @author Nikola Trkulja
+ * @author Andrej Miletic
  */
 public abstract class AbstractFabutObjectAssertTest extends Assert implements IFabutTest {
 
@@ -86,9 +89,16 @@ public abstract class AbstractFabutObjectAssertTest extends Assert implements IF
 
     @Override
     public List<Class<?>> getIgnoredTypes() {
-        final List<Class<?>> ignoredTypes = new LinkedList<Class<?>>();
+        final List<Class<?>> ignoredTypes = new LinkedList<>();
         ignoredTypes.add(IgnoredType.class);
         return ignoredTypes;
+    }
+
+    @Override
+    public Map<Class<?>, List<String>> getIgnoredFields() {
+        final Map<Class<?>, List<String>> ignoredFields = new HashMap<>();
+
+        return ignoredFields;
     }
 
     @Override

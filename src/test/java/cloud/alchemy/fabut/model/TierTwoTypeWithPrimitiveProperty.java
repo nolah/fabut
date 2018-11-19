@@ -15,7 +15,7 @@ public class TierTwoTypeWithPrimitiveProperty extends TierTwoType {
     /**
      * The Constant PROPERTY2.
      */
-    public static final PropertyPath<String> PROPERTY2 = new PropertyPath<String>("property2");
+    public static final PropertyPath<String> PROPERTY2 = new PropertyPath<>("property2");
 
     /**
      * The property2.

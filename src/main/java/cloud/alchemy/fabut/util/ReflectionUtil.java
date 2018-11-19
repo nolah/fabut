@@ -6,8 +6,7 @@ import cloud.alchemy.fabut.graph.NodesList;
 import junit.framework.AssertionFailedError;
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -59,8 +58,11 @@ public final class ReflectionUtil {
      * @param method thats checking
      * @return <code>true</code> if method is "real" get method, <code>false</code> otherwise
      */
-    public static boolean isGetMethod(final Class<?> classs, final Method method) {
+    public static boolean isGetMethod(final Class<?> classs, final Method method, Map<Class<?>, List<String>> ignoredFields) {
         try {
+            if (isIgnoredField(ignoredFields, classs, getFieldName(method))) {
+                return false;
+            }
             if (method.getName().startsWith(IS_METHOD_PREFIX)) {
                 // if field type is primitive boolean
                 return classs.getDeclaredField(getFieldName(method)).getType() == boolean.class;
@@ -185,6 +187,18 @@ public final class ReflectionUtil {
     }
 
     /**
+     * Check if specified fieldName is ignored for the specified class
+     *
+     * @param ignoredFields all ignored fields by classes
+     * @param clazz class for which we check if field is ignored
+     * @param fieldName field name for which we are checking ig its ignored
+     * @return <code>true</code> if field is ignored, otherwise <code>false</code>
+     */
+    public static boolean isIgnoredField(Map<Class<?>, List<String>> ignoredFields, Class clazz, String fieldName) {
+        return ignoredFields.getOrDefault(clazz, Collections.emptyList()).contains(fieldName);
+    }
+
+    /**
      * Checks if object is ignored type.
      *
      * @param firstObject  that is checked
@@ -229,17 +243,30 @@ public final class ReflectionUtil {
      * @param types map of all types by their Assertable type
      * @return {@link List} of real "get" methods of class X
      */
-    public static List<Method> getGetMethods(final Object object, final Map<AssertableType, List<Class<?>>> types) {
+    public static List<Method> getGetMethods(final Object object, final Map<AssertableType, List<Class<?>>> types, final Map<Class<?>, List<String>> ignoredFields) {
 
-        final List<Method> getMethods = new ArrayList<Method>();
-        final List<Method> getMethodsComplexType = new ArrayList<Method>();
+        final List<Method> getMethods = new ArrayList<>();
+        final List<Method> getMethodsComplexType = new ArrayList<>();
         final boolean isEntityClass = isEntityType(object.getClass(), types);
 
         final Method[] allMethods = object.getClass().getMethods();
         for (final Method method : allMethods) {
-            if (isGetMethod(object.getClass(), method) && !(isEntityClass && isCollectionClass(method.getReturnType()))) {
-                // complex or entity type get methods inside object come last in list
-                if (isComplexType(method.getReturnType(), types) || isEntityType(method.getReturnType(), types)) {
+            if (isGetMethod(object.getClass(), method, ignoredFields) && !(isEntityClass && isCollectionClass(method.getReturnType()))
+                    && !isIgnoredField(ignoredFields, object.getClass(), getFieldName(method))) {
+
+                final Class methodReturnType = method.getReturnType();
+                final Class clazz;
+
+                // TODO write test with List of list of something, and Optional of optional
+                if (isCollectionClass(methodReturnType) || methodReturnType.isAssignableFrom(Optional.class)) {
+                    clazz = getGenericType(method.getGenericReturnType());
+                } else {
+                    clazz = methodReturnType;
+                }
+
+                // complex or entity type get methods inside object come last in list,
+                // this is important because otherwise inner object asserts will possibly 'eat up' expected properties of parent object during asserts
+                if (isComplexType(clazz, types) || isEntityType(clazz, types)) {
                     getMethodsComplexType.add(method);
                 } else {
                     getMethods.add(method);
@@ -249,6 +276,49 @@ public final class ReflectionUtil {
         getMethods.addAll(getMethodsComplexType);
         return getMethods;
 
+    }
+
+    /**
+     *
+     * @param genericType Type of generic container
+     * @return Class that is contained in List or Optional
+     */
+    public static Class<?> getGenericType(Type genericType) {
+
+        if (genericType instanceof Class && !isCollectionClass((Class) genericType)) {
+            return (Class) genericType;
+        }
+
+        if (genericType instanceof ParameterizedType) {
+            final ParameterizedType parameterizedType = (ParameterizedType) genericType;
+
+            if (parameterizedType.getActualTypeArguments()[0] instanceof Class && !isCollectionClass((Class)parameterizedType.getActualTypeArguments()[0])) {
+                return (Class)(parameterizedType).getActualTypeArguments()[0];
+            }
+
+            if ((parameterizedType).getRawType() instanceof Class && !isCollectionClass((Class)parameterizedType.getRawType())) {
+                return (Class) (parameterizedType).getRawType();
+            }
+
+            return getGenericType(parameterizedType.getActualTypeArguments()[0]);
+        }
+
+        if (genericType instanceof WildcardType) {
+            final WildcardType wildcardType = (WildcardType) genericType;
+            return getGenericType(wildcardType.getUpperBounds()[0]);
+        }
+
+        if (genericType instanceof TypeVariable) {
+            TypeVariable typeVariable = (TypeVariable) genericType;
+            return getGenericType(typeVariable.getBounds()[0]);
+        }
+
+        if (genericType instanceof GenericArrayType) {
+            GenericArrayType genericArrayType = (GenericArrayType) genericType;
+            return getGenericType(genericArrayType.getGenericComponentType());
+        }
+
+        throw new IllegalStateException("Not recognised type");
     }
 
     /**
@@ -282,6 +352,8 @@ public final class ReflectionUtil {
             return AssertableType.LIST_TYPE;
         } else if (Map.class.isAssignableFrom(typeClass)) {
             return AssertableType.MAP_TYPE;
+        } else if (Optional.class.isAssignableFrom(typeClass)) {
+            return AssertableType.OPTIONAL_TYPE;
         } else if (types.get(AssertableType.COMPLEX_TYPE).contains(typeClass)) {
             return AssertableType.COMPLEX_TYPE;
         } else if (types.get(AssertableType.ENTITY_TYPE).contains(typeClass)) {
@@ -305,7 +377,7 @@ public final class ReflectionUtil {
      * @throws CopyException the copy exception
      */
     public static Object createCopyObject(final Object object, final NodesList nodes,
-                                          final Map<AssertableType, List<Class<?>>> types) throws CopyException {
+                                          final Map<AssertableType, List<Class<?>>> types, final Map<Class<?>, List<String>> ignoredFields) throws CopyException {
 
         Object copy = nodes.getExpected(object);
         if (copy != null) {
@@ -323,10 +395,10 @@ public final class ReflectionUtil {
         final Class<?> classObject = object.getClass();
         for (final Method method : classObject.getMethods()) {
 
-            if (isGetMethod(object.getClass(), method) && method.getParameterAnnotations().length == 0 && !(isEntityType && isCollectionClass(method.getReturnType()))) {
+            if (isGetMethod(object.getClass(), method, ignoredFields) && method.getParameterAnnotations().length == 0 && !(isEntityType && isCollectionClass(method.getReturnType()))) {
                 final String propertyName = getFieldName(method);
                 final Object propertyForCopying = getPropertyForCopying(object, method);
-                final Object copiedProperty = copyProperty(propertyForCopying, nodes, types);
+                final Object copiedProperty = copyProperty(propertyForCopying, nodes, types, ignoredFields);
                 if (!invokeSetMethod(method, classObject, propertyName, copy, copiedProperty)) {
                     throw new CopyException(classObject.getSimpleName());
                 }
@@ -374,7 +446,7 @@ public final class ReflectionUtil {
      * @throws  CopyException if it can't make a copy of property
      */
     public static Object copyProperty(final Object propertyForCopying, final NodesList nodes,
-                                      final Map<AssertableType, List<Class<?>>> types) throws CopyException {
+                                      final Map<AssertableType, List<Class<?>>> types, final Map<Class<?>, List<String>> ignoredFields) throws CopyException {
         if (propertyForCopying == null) {
             // its null we shouldn't do anything
             return null;
@@ -382,21 +454,21 @@ public final class ReflectionUtil {
 
         if (isComplexType(propertyForCopying.getClass(), types)) {
             // its complex object, we need its copy
-            return createCopyObject(propertyForCopying, nodes, types);
+            return createCopyObject(propertyForCopying, nodes, types, ignoredFields);
         }
 
         if (isListType(propertyForCopying)) {
             // just creating new list with same elements
-            return copyList((List<?>) propertyForCopying, types);
+            return copyList((List<?>) propertyForCopying, types, ignoredFields);
         }
 
         if (isSetType(propertyForCopying)) {
             // just creating new set with same elements
-            return copySet((Set<?>) propertyForCopying, types);
+            return copySet((Set<?>) propertyForCopying, types, ignoredFields);
         }
 
         if (isMapType(propertyForCopying)) {
-            return copyMap((Map) propertyForCopying, types);
+            return copyMap((Map) propertyForCopying, types, ignoredFields);
         }
 
         // if its not list or some complex type same object will be added.
@@ -412,11 +484,11 @@ public final class ReflectionUtil {
      * @return copy of the map
      * @throws CopyException if can't make a copy
      */
-    public static Object copyMap(final Map propertyForCopying, final Map<AssertableType, List<Class<?>>> types)
+    public static Object copyMap(final Map propertyForCopying, final Map<AssertableType, List<Class<?>>> types, final Map<Class<?>, List<String>> ignoredFields)
             throws CopyException {
         final Map mapCopy = new HashMap();
         for (final Object key : propertyForCopying.keySet()) {
-            mapCopy.put(key, copyProperty(propertyForCopying.get(key), new NodesList(), types));
+            mapCopy.put(key, copyProperty(propertyForCopying.get(key), new NodesList(), types, ignoredFields));
         }
         return mapCopy;
     }
@@ -430,11 +502,11 @@ public final class ReflectionUtil {
      * @return copied list
      * @throws CopyException the copy exception
      */
-    public static <T> List<T> copyList(final List<T> list, final Map<AssertableType, List<Class<?>>> types)
+    public static <T> List<T> copyList(final List<T> list, final Map<AssertableType, List<Class<?>>> types, Map<Class<?>, List<String>> ignoredFields)
             throws CopyException {
         final List<T> copyList = new ArrayList<T>();
         for (final T t : list) {
-            copyList.add((T) copyProperty(t, new NodesList(), types));
+            copyList.add((T) copyProperty(t, new NodesList(), types, ignoredFields));
         }
         return copyList;
     }
@@ -448,11 +520,11 @@ public final class ReflectionUtil {
      * @return copied list
      * @throws CopyException the copy exception
      */
-    public static <T> Set<T> copySet(final Set<T> set, final Map<AssertableType, List<Class<?>>> types)
+    public static <T> Set<T> copySet(final Set<T> set, final Map<AssertableType, List<Class<?>>> types, Map<Class<?>, List<String>> ignoredFields)
             throws CopyException {
         final Set<T> copySet = new HashSet<T>();
         for (final T t : set) {
-            copySet.add((T) copyProperty(t, new NodesList(), types));
+            copySet.add((T) copyProperty(t, new NodesList(), types, ignoredFields));
         }
         return copySet;
     }
@@ -465,7 +537,7 @@ public final class ReflectionUtil {
      * @return copied object
      * @throws CopyException the copy exception
      */
-    public static Object createCopy(final Object object, final Map<AssertableType, List<Class<?>>> types)
+    public static Object createCopy(final Object object, final Map<AssertableType, List<Class<?>>> types, Map<Class<?>, List<String>> ignoredFields)
             throws CopyException {
         if (object == null) {
             return null;
@@ -473,15 +545,15 @@ public final class ReflectionUtil {
 
         if (isListType(object)) {
             final List<?> list = (List<?>) object;
-            return copyList(list, types);
+            return copyList(list, types, ignoredFields);
         }
 
         if (isSetType(object)) {
             final Set<?> set = (Set<?>) object;
-            return copySet(set, types);
+            return copySet(set, types, ignoredFields);
         }
 
-        return createCopyObject(object, new NodesList(), types);
+        return createCopyObject(object, new NodesList(), types, ignoredFields);
 
     }
 

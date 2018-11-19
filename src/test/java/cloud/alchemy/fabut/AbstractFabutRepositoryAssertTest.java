@@ -1,8 +1,6 @@
 package cloud.alchemy.fabut;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import cloud.alchemy.fabut.model.*;
 import org.junit.After;
@@ -16,13 +14,14 @@ import org.junit.Before;
  * @author Nikola Olah
  * @author Bojan Babic
  * @author Nikola Trkulja
+ * @author Andrej Miletic
  */
 public abstract class AbstractFabutRepositoryAssertTest extends Assert implements IFabutRepositoryTest {
     // mock lists
-    private List<Object> entityTierOneTypes = new ArrayList<Object>();
-    private List<Object> entityTierTwoTypes = new ArrayList<Object>();
-    private List<Object> entityWithListTypes = new ArrayList<Object>();
-    private List<Object> noDefaultConstructorEntities = new ArrayList<Object>();
+    private List<Object> entityTierOneTypes = new ArrayList<>();
+    private List<Object> entityTierTwoTypes = new ArrayList<>();
+    private List<Object> entityWithListTypes = new ArrayList<>();
+    private List<Object> noDefaultConstructorEntities = new ArrayList<>();
     private FabutRepositoryAssert fabutRepositoryAssert;
 
     public AbstractFabutRepositoryAssertTest() {
@@ -150,9 +149,15 @@ public abstract class AbstractFabutRepositoryAssertTest extends Assert implement
 
     @Override
     public List<Class<?>> getIgnoredTypes() {
-        final List<Class<?>> ignoredTypes = new LinkedList<Class<?>>();
+        final List<Class<?>> ignoredTypes = new LinkedList<>();
         ignoredTypes.add(IgnoredType.class);
         return ignoredTypes;
+    }
+
+    @Override
+    public Map<Class<?>, List<String>> getIgnoredFields(){
+
+        return new HashMap<>();
     }
 
     @Override
