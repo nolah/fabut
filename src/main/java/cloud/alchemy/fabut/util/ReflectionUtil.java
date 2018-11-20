@@ -285,8 +285,12 @@ public final class ReflectionUtil {
      */
     public static Class<?> getGenericType(Type genericType) {
 
-        if (genericType instanceof Class && !isCollectionClass((Class) genericType)) {
-            return (Class) genericType;
+        if (genericType instanceof Class) {
+            Class clazz = (Class) genericType;
+            if (!isCollectionClass(clazz))
+                return clazz;
+
+            return Object.class;
         }
 
         if (genericType instanceof ParameterizedType) {
@@ -318,7 +322,7 @@ public final class ReflectionUtil {
             return getGenericType(genericArrayType.getGenericComponentType());
         }
 
-        throw new IllegalStateException("Not recognised type");
+        return Object.class;
     }
 
     /**
